@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Veldwerk</title>
+<meta name="theme-color" content="#F6F2EC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1D1B19" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Veldwerk">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{--bg:#F6F2EC;--card:#FFFDF9;--ink:#2B2724;--muted:#6F665E;--line:#E7DFD5;--line2:#D9CFC3;--accent:#C4532B;--onaccent:#FFFFFF;--soft:#FBE7DD;--softink:#9A3412;--chip:#F0E9E1;--ok:#2E7D4F;--danger:#B3261E;--r:14px}
+:root[data-theme=dark]{--bg:#1D1B19;--card:#272421;--ink:#F1ECE6;--muted:#A59B90;--line:#3A3530;--line2:#5A534C;--accent:#E8875F;--onaccent:#1D1B19;--soft:#3A2A22;--softink:#F2A27F;--chip:#332F2B;--ok:#3E9A63;--danger:#F2817A}
+@media (prefers-color-scheme: dark){:root[data-theme=auto]{--bg:#1D1B19;--card:#272421;--ink:#F1ECE6;--muted:#A59B90;--line:#3A3530;--line2:#5A534C;--accent:#E8875F;--onaccent:#1D1B19;--soft:#3A2A22;--softink:#F2A27F;--chip:#332F2B;--ok:#3E9A63;--danger:#F2817A}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+.num{font-variant-numeric:tabular-nums}
+header.top{position:sticky;top:0;z-index:6;background:var(--bg);padding:calc(12px + env(safe-area-inset-top)) 16px 8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+header.top h1{margin:0;font-size:22px;font-weight:800;line-height:1.15}
+header.top .sub{font-size:12px;color:var(--muted);font-weight:600}
+.hbtns{display:flex;gap:6px}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--ink)}
+main{padding:0 16px calc(110px + env(safe-area-inset-bottom));max-width:720px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800}
+.card h2 small{color:var(--muted);font-weight:600;font-size:12px}
+.sec{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px}
+.row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.row.done .tx{text-decoration:line-through;color:var(--muted)}
+.tx{flex:1;min-width:0}
+.tx b{font-weight:800}
+.tx small{display:block;color:var(--muted);font-size:12px;font-weight:600}
+.click{cursor:pointer}
+.pill{display:inline-flex;align-items:center;font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap;flex:none}
+.pill.warn{background:var(--soft);color:var(--softink)}
+.pill.ok{background:var(--ok);color:#fff}
+.pill.mid{background:var(--chip);color:var(--ink)}
+.pill.wo{background:var(--ink);color:var(--bg)}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:1px solid var(--line);background:var(--card);padding:7px 13px;border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vseg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px}
+.vseg button{border:0;background:none;font-weight:800;font-size:12px;padding:6px 12px;border-radius:99px;cursor:pointer}
+.vseg button.on{background:var(--ink);color:var(--bg)}
+.btn{border:0;background:var(--accent);color:var(--onaccent);font-weight:800;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:15px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.ghost{background:var(--line);color:var(--ink)}
+.btn.line{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+.btn.dash{background:transparent;border:1.5px dashed var(--line2);color:var(--ink)}
+.btn.danger{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
+.btn.block{width:100%}
+.btn.big{min-height:120px;flex-direction:column;font-size:22px;border-radius:18px}
+.btn.big small{font-size:14px;font-weight:700;opacity:.9}
+.btn[disabled]{opacity:.5}
+.mini{border:1px solid var(--line);background:var(--bg);font-size:12px;font-weight:700;padding:6px 10px;border-radius:99px;cursor:pointer;flex:none;white-space:nowrap}
+.mini.sent{color:var(--ok);border-color:var(--ok)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.quick{height:76px;background:var(--card);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;cursor:pointer}
+.quick svg{color:var(--accent)}
+.active{border:2px solid var(--accent)}
+.badge{font-size:12px;font-weight:800;color:var(--onaccent);background:var(--accent);border-radius:99px;padding:3px 10px}
+.timer{font-size:40px;font-weight:800;line-height:1}
+.notice{font-size:13px;padding:10px 12px;border-radius:12px;border:1px dashed var(--line2);color:var(--muted);margin-bottom:12px;line-height:1.45}
+.notice b{color:var(--ink)}
+.next{font-size:13px;margin:0 0 12px;padding:9px 11px;background:var(--soft);border-radius:10px}
+.ev{display:flex;gap:10px;padding:9px 10px;border-radius:10px;margin-bottom:6px;background:var(--chip);border-left:4px solid var(--muted);align-items:center}
+.ev.run{background:var(--soft);border-left-color:var(--accent)}
+.ev.reis{border-left-style:dashed}
+.ev .tm{font-weight:800;font-size:13px;min-width:44px}
+.empty{color:var(--muted);font-size:13px;font-style:italic;padding:6px 0}
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.steps i{display:block;height:8px;border-radius:99px;background:var(--line)}
+.steps i.d{background:var(--ink)}
+.steps i.n{background:var(--accent)}
+.steps span{font-size:10px;font-weight:700;color:var(--muted);text-align:center}
+.box{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;flex:none;cursor:pointer;border:2px solid var(--line2);background:transparent;padding:0}
+.box.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.box.open{border:2.5px solid var(--accent)}
+.thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.thumb{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--line) 0 8px,var(--chip) 8px 16px);cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .loc{position:absolute;left:4px;bottom:4px;font-size:10px;font-weight:800;background:rgba(0,0,0,.55);color:#fff;padding:2px 6px;border-radius:99px}
+.thumb .loc.no{background:#B3261E}
+.ncards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ncard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column}
+.ncard .ph{aspect-ratio:4/3;background:repeating-linear-gradient(135deg,var(--line) 0 8px,var(--chip) 8px 16px)}
+.ncard .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ncard .bd{padding:10px;display:flex;flex-direction:column;gap:6px}
+.ncard .bd b{font-size:14px;font-weight:800}
+.ncard .bd p{margin:0;font-size:12px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.chipsel{display:flex;flex-wrap:wrap;gap:6px}
+.chipsel .c{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:6px 6px 6px 12px;border-radius:99px;background:var(--ink);color:var(--bg)}
+.chipsel .c button{width:24px;height:24px;border-radius:99px;border:0;background:var(--bg);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.chipsel .add{font-size:13px;font-weight:700;padding:6px 12px;border-radius:99px;border:1.5px dashed var(--line2);background:transparent;cursor:pointer}
+table.st{width:100%;border-collapse:collapse;font-size:14px}
+table.st th{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:8px 4px;border-bottom:1px solid var(--line)}
+table.st td{padding:10px 4px;border-bottom:1px dashed var(--line);vertical-align:middle}
+table.st tr:last-child td{border-bottom:0}
+table.st .r{text-align:right}
+table.st .c{text-align:center}
+table.st tfoot td{font-weight:800;border-top:1px solid var(--line);border-bottom:0}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(8px + env(safe-area-inset-bottom));z-index:10}
+nav.bottom button{border:0;background:none;color:var(--muted);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;cursor:pointer;flex:1;min-height:48px}
+nav.bottom button.on{color:var(--accent)}
+.fab{position:fixed;right:16px;bottom:calc(82px + env(safe-area-inset-bottom));background:var(--accent);color:var(--onaccent);border:0;border-radius:99px;width:58px;height:58px;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer;z-index:11;display:flex;align-items:center;justify-content:center}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.42);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.open{display:flex}
+.sheet{background:var(--card);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+@media(min-width:600px){.modal{align-items:center}.sheet{border-radius:18px}}
+.sheet h3{margin:0 0 4px;font-size:18px;font-weight:800}
+.sheet .lead{font-size:13px;color:var(--muted);font-weight:600;margin:0 0 10px}
+.seg{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:6px}
+.seg button{padding:11px 4px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:14px;font-weight:700;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+label.l{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 4px}
+.q{font-size:15px;font-weight:800;margin:14px 0 8px}
+input[type=text],input[type=search],input[type=date],input[type=time],input[type=datetime-local],input[type=email],input[type=number],select,textarea{width:100%;padding:11px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:16px}
+textarea{resize:vertical;line-height:1.45}
+.pair{display:flex;gap:8px}.pair>*{flex:1;min-width:0}
+.actions{display:flex;gap:8px;margin-top:16px}
+.actions>*{flex:1}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:600;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:700;font-size:14px;z-index:30;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.viewer img{width:100%;border-radius:12px;display:block}
+.meta{font-size:12px;color:var(--muted)}
+.gap{border:1.5px dashed var(--accent);border-radius:12px;padding:12px;margin-bottom:8px;font-size:14px;line-height:1.4}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header class="top" id="top"></header>
+<main id="main"></main>
+<button class="fab hidden" id="fab" aria-label="Toevoegen"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+<nav class="bottom" id="nav" aria-label="Hoofdmenu">
+  <button data-nav="vandaag"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Vandaag</button>
+  <button data-nav="projecten"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projecten</button>
+  <button data-nav="notities"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h4"/></svg>Notities</button>
+  <button data-nav="taken"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/></svg>Taken</button>
+  <button data-nav="uren"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Uren</button>
+</nav>
+<div class="modal" id="modal"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<input type="file" id="camIn" accept="image/*" capture="environment" class="hidden">
+<input type="file" id="galIn" accept="image/*" multiple class="hidden">
+<input type="file" id="restoreIn" accept=".json,application/json" class="hidden">
+
+<script src="lib.js"></script>
+<script>
+"use strict";
+/* =========================================================
+   Veldwerk – werkdag, metingen, veldnotities, taken en uren
+   Alle gegevens staan lokaal op dit toestel (IndexedDB).
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const pad = n => String(n).padStart(2, "0");
+const nowISO = () => new Date().toISOString();
+const dkey = d => { d = new Date(d); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const hm = iso => { const d = new Date(iso); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fromKey = k => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+const DAYS = ["zo", "ma", "di", "wo", "do", "vr", "za"];
+const DAYS_L = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+const MONTHS = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"];
+const MONTHS_L = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+const dShort = k => { const d = fromKey(k); return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const dLong = k => { const d = fromKey(k); return `${DAYS_L[d.getDay()]} ${d.getDate()} ${MONTHS_L[d.getMonth()]}`; };
+const dtShort = iso => { const d = new Date(iso); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${hm(iso)}`; };
+const dec = mins => (Math.round(mins / 60 * 100) / 100).toFixed(2).replace(".", ",");
+const hmDur = mins => { mins = Math.max(0, Math.round(mins)); return `${Math.floor(mins / 60)}:${pad(mins % 60)}`; };
+const toLocalInput = iso => { if (!iso) return ""; const d = new Date(iso); return `${dkey(d)}T${hm(iso)}`; };
+const fromLocalInput = v => v ? new Date(v).toISOString() : null;
+const combine = (k, t) => { const [h, m] = t.split(":").map(Number); const d = fromKey(k); d.setHours(h, m, 0, 0); return d.toISOString(); };
+function isoWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day);
+  const y = d.getUTCFullYear(); const w = Math.ceil(((d - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7);
+  return { y, w };
+}
+const mondayOf = d => { d = new Date(d); d.setHours(0, 0, 0, 0); const day = d.getDay() || 7; d.setDate(d.getDate() - day + 1); return d; };
+function distM(a, b) {
+  const R = 6371000, r = x => x * Math.PI / 180;
+  const dLat = r(b.lat - a.lat), dLng = r(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const fmtLL = (lat, lng) => `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("show"), 2400); }
+
+/* ---------- Opslag (IndexedDB) ---------- */
+const DB = {
+  db: null,
+  open() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open("veldwerk", 1);
+      r.onupgradeneeded = () => { const d = r.result; d.createObjectStore("kv"); d.createObjectStore("photos", { keyPath: "id" }); };
+      r.onsuccess = () => { DB.db = r.result; res(); };
+      r.onerror = () => rej(r.error);
+    });
+  },
+  tx(store, mode, fn) {
+    return new Promise((res, rej) => {
+      const t = DB.db.transaction(store, mode); const s = t.objectStore(store);
+      const out = fn(s); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+    });
+  },
+  get(k) { return DB.tx("kv", "readonly", s => s.get(k)); },
+  set(k, v) { return DB.tx("kv", "readwrite", s => s.put(v, k)); },
+  photoPut(p) { return DB.tx("photos", "readwrite", s => s.put(p)); },
+  photoGet(id) { return DB.tx("photos", "readonly", s => s.get(id)); },
+  photoDel(id) { return DB.tx("photos", "readwrite", s => s.delete(id)); },
+  photoAll() { return DB.tx("photos", "readonly", s => s.getAll()); },
+  photoClear() { return DB.tx("photos", "readwrite", s => s.clear()); }
+};
+
+const DEFAULT = () => ({
+  v: 1,
+  projects: [],      // {id,nr,name,indirect,active,locs:[{lat,lng,at}],created}
+  segs: [],          // {id,pid,start,end,kind:'werk'|'reis'|'overig',lat,lng}
+  travel: null,      // {since, fromPid}
+  meas: [],          // {id,name,pids:[],steps:{gemeten,export,verwerkt,verzonden,projectmap},created}
+  notes: [],         // {id,title,body,pids:[],mids:[],action,photos:[ids],created,updated}
+  tasks: [],         // {id,title,due,done,pid,mid,noteId,tt,created}
+  portal: {},        // {dateKey:true}
+  ignoredGaps: {},
+  settings: { theme: "auto", radius: 150, round: true, ttMail: "" }
+});
+let S = DEFAULT();
+let saveT = null;
+function save() { clearTimeout(saveT); saveT = setTimeout(() => DB.set("state", S).catch(() => toast("Opslaan mislukt")), 150); }
+function applyTheme() {
+  document.documentElement.dataset.theme = S.settings.theme || "auto";
+  const dark = S.settings.theme === "dark" || (S.settings.theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  $$('meta[name="theme-color"]').forEach(m => m.setAttribute("content", dark ? "#1D1B19" : "#F6F2EC"));
+}
+
+/* ---------- Model ---------- */
+const STEPS = [["gemeten", "Gemeten", "Gemeten"], ["export", "Geëxporteerd", "Export"], ["verwerkt", "Verwerkt in mijn map", "Verwerkt"], ["verzonden", "Verzonden", "Verzonden"], ["projectmap", "In projectmap", "Projectmap"]];
+const NEXTLBL = { export: "Niet geëxporteerd", verwerkt: "Te verwerken", verzonden: "Te verzenden", projectmap: "Naar projectmap" };
+const P = id => S.projects.find(p => p.id === id);
+const M = id => S.meas.find(m => m.id === id);
+const N = id => S.notes.find(n => n.id === id);
+const T = id => S.tasks.find(t => t.id === id);
+const pnr = id => (P(id) || { nr: "?" }).nr;
+const pname = id => (P(id) || { name: "" }).name;
+const activeProjects = () => S.projects.filter(p => p.active !== false).sort((a, b) => a.nr.localeCompare(b.nr));
+const running = () => S.segs.find(s => !s.end);
+const segsOn = k => S.segs.filter(s => dkey(s.start) === k).sort((a, b) => a.start.localeCompare(b.start));
+const nextStep = m => STEPS.find(([k]) => !m.steps[k]);
+function measPill(m) {
+  const n = nextStep(m);
+  if (!n) return `<span class="pill ok">Klaar</span>`;
+  if (n[0] === "gemeten") return `<span class="pill mid">Gepland</span>`;
+  return `<span class="pill ${n[0] === "export" ? "warn" : "mid"}">${NEXTLBL[n[0]]}</span>`;
+}
+function stepsBar(m) {
+  const n = nextStep(m);
+  return `<div class="steps">${STEPS.map(([k]) => `<i class="${m.steps[k] ? "d" : n && n[0] === k ? "n" : ""}"></i>`).join("")}${STEPS.map(s => `<span>${s[2]}</span>`).join("")}</div>`;
+}
+const notesOfProject = pid => S.notes.filter(n => n.pids.includes(pid));
+const notesOfMeas = mid => S.notes.filter(n => n.mids.includes(mid));
+const measOfProject = pid => S.meas.filter(m => m.pids.includes(pid));
+function nearestProject(lat, lng) {
+  let best = null;
+  for (const p of S.projects) {
+    if (p.active === false || p.indirect) continue;
+    for (const l of p.locs || []) {
+      const d = distM({ lat, lng }, l);
+      if (!best || d < best.d) best = { p, d };
+    }
+  }
+  return best;
+}
+const rnd = d => { if (!S.settings.round) return d; const q = 15 * 60000; return new Date(Math.round(d.getTime() / q) * q); };
+function segMins(s) { return (new Date(s.end || Date.now()) - new Date(s.start)) / 60000; }
+// Dagstaat-regels in het portaal-format: aaneengesloten blokken per werkorder, afgerond op kwartier
+function dayLines(k) {
+  const lines = [];
+  for (const s of segsOn(k)) {
+    const a = rnd(new Date(s.start)), b = rnd(new Date(s.end || Date.now()));
+    if (b <= a) continue;
+    const key = (s.kind === "overig" ? "o|" : "r|") + s.pid;
+    const last = lines[lines.length - 1];
+    if (last && last.key === key && last.end.getTime() >= a.getTime() - 60000) { if (b > last.end) last.end = b; last.running = last.running || !s.end; }
+    else lines.push({ key, pid: s.pid, overig: s.kind === "overig", start: a, end: b, running: !s.end });
+  }
+  lines.forEach(l => l.mins = (l.end - l.start) / 60000);
+  return lines;
+}
+const lineTimes = l => `${hm(l.start)} - ${hm(l.end)}`;
+
+/* ---------- Locatie ---------- */
+function getPos(opts) {
+  return new Promise((res, rej) => {
+    if (!navigator.geolocation) return rej(new Error("Geen locatie beschikbaar op dit toestel"));
+    navigator.geolocation.getCurrentPosition(p => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, alt: p.coords.altitude }),
+      e => rej(new Error(e.code === 1 ? "Geen toestemming voor locatie. Zet locatie aan voor deze app." : "Locatie niet gevonden, probeer opnieuw")),
+      Object.assign({ enableHighAccuracy: true, timeout: 20000, maximumAge: 15000 }, opts || {}));
+  });
+}
+
+/* ---------- UI-basis ---------- */
+let view = { name: "vandaag" }; const back = [];
+let ui = { projTab: "lijst", noteFilter: "alle", noteQ: "", taskFilter: "alle", urenMode: "dag", urenDay: dkey(new Date()), weekRef: dkey(new Date()), measFilter: "open" };
+function go(name, extra, push = true) { if (push) back.push(view); view = Object.assign({ name }, extra || {}); render(); window.scrollTo(0, 0); }
+function goBack() { view = back.pop() || { name: "vandaag" }; render(); }
+const modal = $("#modal"), sheet = $("#sheet");
+function openSheet(html, mount) { sheet.innerHTML = html; modal.classList.add("open"); sheet.scrollTop = 0; if (mount) mount(); }
+function closeSheet() { modal.classList.remove("open"); sheet.innerHTML = ""; }
+modal.addEventListener("click", e => { if (e.target === modal) closeSheet(); });
+const I = {
+  back: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>`,
+  gear: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>`,
+  share: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>`,
+  pin: `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>`,
+  note: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h4"/></svg>`,
+  cam: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`,
+  meas: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg>`,
+  laptop: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>`,
+  copy: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>`,
+  pen: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>`,
+  x: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`,
+  check: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>`,
+  play: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>`
+};
+const projOptions = (sel, opts = {}) => (opts.none ? `<option value="">${esc(opts.none)}</option>` : "") +
+  activeProjects().concat(sel && P(sel) && P(sel).active === false ? [P(sel)] : []).map(p => `<option value="${p.id}" ${p.id === sel ? "selected" : ""}>${esc(p.nr)}${p.name ? " · " + esc(p.name) : ""}</option>`).join("");
+
+/* ---------- Header + nav ---------- */
+function setTop(title, sub, opts = {}) {
+  $("#top").innerHTML = `${opts.back ? `<button class="iconbtn" data-act="back" aria-label="Terug">${I.back}</button>` : ""}
+    <div style="flex:1;min-width:0">${sub ? `<div class="sub">${esc(sub)}</div>` : ""}<h1>${esc(title)}</h1></div>
+    <div class="hbtns">${opts.right || ""}<button class="iconbtn" data-act="export" aria-label="Exporteren">${I.share}</button><button class="iconbtn" data-act="settings" aria-label="Instellingen">${I.gear}</button></div>`;
+}
+function setFab(fn) { const f = $("#fab"); if (fn) { f.classList.remove("hidden"); f.onclick = fn; } else f.classList.add("hidden"); }
+function render() {
+  const root = { vandaag: "vandaag", projecten: "projecten", project: "projecten", meting: "projecten", notities: "notities", taken: "taken", uren: "uren", dagbewerken: "uren" }[view.name] || "vandaag";
+  $$("#nav button").forEach(b => b.classList.toggle("on", b.dataset.nav === root));
+  setFab(null);
+  ({ vandaag: rVandaag, projecten: rProjecten, project: rProject, meting: rMeting, notities: rNotities, taken: rTaken, uren: rUren, dagbewerken: rDagBewerken }[view.name] || rVandaag)();
+  fillThumbs();
+}
+$("#nav").addEventListener("click", e => { const b = e.target.closest("[data-nav]"); if (!b) return; back.length = 0; view = { name: b.dataset.nav }; render(); window.scrollTo(0, 0); });
+
+/* ---------- Thumbnails ---------- */
+const urlCache = new Map();
+async function photoURL(id, full) {
+  const key = id + (full ? ":f" : "");
+  if (urlCache.has(key)) return urlCache.get(key);
+  const p = await DB.photoGet(id); if (!p) return null;
+  const u = URL.createObjectURL(full ? p.blob : (p.thumb || p.blob)); urlCache.set(key, u); return u;
+}
+function fillThumbs(root) {
+  (root || document).querySelectorAll("img[data-ph]").forEach(async img => { const u = await photoURL(img.dataset.ph); if (u) img.src = u; else img.remove(); });
+}
+
+/* =================== VANDAAG =================== */
+let tick = null;
+function rVandaag() {
+  const k = dkey(new Date()), r = running();
+  const lines = dayLines(k), total = lines.reduce((s, l) => s + l.mins, 0);
+  setTop("Mijn werkdag", dLong(k));
+  let h = "";
+  if (r) {
+    const p = P(r.pid) || {};
+    const onP = segsOn(k).filter(s => s.pid === r.pid);
+    const reis = onP.filter(s => s.kind === "reis").reduce((a, s) => a + segMins(s), 0);
+    const blockStart = onP.length ? onP[0].start : r.start;
+    const mins = onP.reduce((a, s) => a + segMins(s), 0);
+    h += `<section class="card active">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="badge">Loopt sinds ${hm(r.start)}</span>${reis ? `<span class="meta" style="font-weight:600">incl. ${dec(reis)} u reistijd</span>` : ""}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:12px">
+        <div style="min-width:0"><div style="font-size:20px;font-weight:800">${esc(p.nr)}</div><div class="meta" style="font-size:14px;font-weight:600">${esc(p.name || "")}</div></div>
+        <span class="timer num" id="timer" data-from="${esc(blockStart)}">${hmDur(mins)}</span></div>
+      <div class="grid2"><button class="btn ghost" data-act="switch">Wissel werkorder</button><button class="btn" data-act="depart">Vertrek</button></div>
+    </section>`;
+  } else if (S.travel) {
+    const fm = (Date.now() - new Date(S.travel.since)) / 60000;
+    h += `<section class="card" style="background:var(--ink);color:var(--bg);border-color:var(--ink)">
+      <div style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.8">Onderweg</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:17px;font-weight:800">Vertrokken${S.travel.fromPid ? " van " + esc(pnr(S.travel.fromPid)) : ""}</span><span class="timer num" id="timer" data-from="${esc(S.travel.since)}" style="font-size:32px">${hmDur(fm)}</span></div>
+      <div style="font-size:13px;opacity:.85;margin-top:4px">Sinds ${hm(S.travel.since)} · reistijd gaat naar je volgende werkorder</div>
+      <button class="mini" data-act="stoptravel" style="margin-top:10px;background:transparent;color:var(--bg);border-color:currentColor">Niet gereden / einde dag</button>
+    </section>`;
+  }
+  if (!r) {
+    h += `<button class="btn big block" data-act="pin" style="margin-bottom:12px">${I.pin}Pin locatie<small>Ik ben aangekomen</small></button>
+      <button class="btn line block" data-act="laptop" style="margin-bottom:12px">${I.laptop}Werk achter laptop / zonder locatie</button>`;
+  }
+  h += `<div class="grid3" style="margin-bottom:12px">
+    <button class="quick" data-act="newnote">${I.note}Notitie</button>
+    <button class="quick" data-act="newphoto">${I.cam}Foto</button>
+    <button class="quick" data-act="newmeas">${I.meas}Meting</button></div>`;
+  const notExp = S.meas.filter(m => m.steps.gemeten && !m.steps.export);
+  if (notExp.length) h += `<div class="notice click" data-act="gomeas" data-f="export"><b>${notExp.length} meting${notExp.length > 1 ? "en" : ""}</b> nog niet geëxporteerd · ${notExp.slice(0, 3).map(m => esc(m.name)).join(", ")}</div>`;
+  const openTasks = S.tasks.filter(t => !t.done && t.due && t.due <= k);
+  if (openTasks.length) h += `<div class="notice click" data-nav-go="taken"><b>${openTasks.length} ta${openTasks.length > 1 ? "ken" : "ak"}</b> voor vandaag · ${openTasks.slice(0, 2).map(t => esc(t.title)).join(", ")}</div>`;
+  if (!S.projects.length) h += `<div class="notice">Nog geen werkorders. Pin je locatie bij aankomst: je kunt dan meteen een werkorder aanmaken en de locatie koppelen. Indirecte codes (bijv. IND-KENNISCENTRUM) voeg je toe via <b>Projecten</b>.</div>`;
+  h += `<div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>Vandaag · <span class="num">${dec(total)}</span> u</span><button class="mini" data-act="editday" data-k="${k}">Bewerken</button></div>`;
+  const segs = segsOn(k);
+  if (!segs.length) h += `<div class="empty">Nog niets geboekt vandaag.</div>`;
+  segs.forEach(s => {
+    const nn = S.notes.filter(n => n.pids.includes(s.pid) && dkey(n.created) === k).length;
+    const mm = S.meas.filter(m => m.pids.includes(s.pid) && m.steps.gemeten && dkey(m.steps.gemeten) === k).length;
+    h += `<div class="ev ${!s.end ? "run" : ""} ${s.kind === "reis" ? "reis" : ""} click" data-act="editseg" data-id="${s.id}">
+      <span class="tm num">${hm(s.start)}</span>
+      <div class="tx"><b>${esc(pnr(s.pid))}</b> ${s.kind === "reis" ? "· reistijd" : s.kind === "overig" ? "· overig" : esc(pname(s.pid) ? "· " + pname(s.pid) : "")}
+      <small>${s.end ? "tot " + hm(s.end) : "loopt nog"}${mm ? ` · ${mm} meting${mm > 1 ? "en" : ""}` : ""}${nn ? ` · ${nn} notitie${nn > 1 ? "s" : ""}` : ""}</small></div>
+      <span class="num" style="font-weight:800">${dec(segMins(s))}</span></div>`;
+  });
+  $("#main").innerHTML = h;
+  clearInterval(tick);
+  tick = setInterval(() => { const t = $("#timer"); if (!t || view.name !== "vandaag") return clearInterval(tick); rVandaagTimer(); }, 20000);
+}
+function rVandaagTimer() {
+  const r = running(), t = $("#timer"); if (!t) return;
+  if (r) { const onP = segsOn(dkey(new Date())).filter(s => s.pid === r.pid); t.textContent = hmDur(onP.reduce((a, s) => a + segMins(s), 0)); }
+  else if (S.travel) t.textContent = hmDur((Date.now() - new Date(S.travel.since)) / 60000);
+}
+
+/* ---------- Pinnen / starten / wisselen / vertrekken ---------- */
+function startSeg(pid, start, kind, pos) {
+  const s = { id: uid("s"), pid, start: start || nowISO(), end: null, kind: kind || "werk" };
+  if (pos) { s.lat = pos.lat; s.lng = pos.lng; }
+  S.segs.push(s); return s;
+}
+function stopRunning(at) { const r = running(); if (r) { r.end = at || nowISO(); if (new Date(r.end) <= new Date(r.start)) S.segs = S.segs.filter(x => x !== r); } }
+async function doPin() {
+  openSheet(`<h3>Locatie bepalen…</h3><p class="lead">Even geduld, GPS zoekt je positie.</p>`);
+  let pos;
+  try { pos = await getPos({ maximumAge: 0 }); } catch (e) {
+    openSheet(`<h3>Locatie niet gelukt</h3><p class="lead">${esc(e.message)}</p><div class="actions"><button class="btn ghost" data-act="close">Sluit</button><button class="btn" data-act="pin">Opnieuw</button></div>
+      <button class="btn dash block" data-act="laptop" style="margin-top:8px">Start zonder locatie</button>`);
+    return;
+  }
+  pinSheet(pos, new Date().toISOString());
+}
+function pinSheet(pos, at) {
+  const near = nearestProject(pos.lat, pos.lng);
+  const hit = near && near.d <= (S.settings.radius || 150) ? near.p : null;
+  const tr = S.travel;
+  const trMins = tr ? Math.max(0, (new Date(at) - new Date(tr.since)) / 60000) : 0;
+  const hasP = activeProjects().some(p => !p.indirect);
+  openSheet(`<h3>Locatie gepind</h3>
+    <p class="lead num">Aangekomen om ${hm(at)} · ${fmtLL(pos.lat, pos.lng)} · ±${Math.round(pos.acc || 0)} m</p>
+    <div class="seg" style="--n:2"><button data-m="bestaand" class="${hasP ? "on" : ""}" ${hasP ? "" : "disabled"}>Bestaande werkorder</button><button data-m="nieuw" class="${hasP ? "" : "on"}">Nieuwe werkorder</button></div>
+    <div id="pmB" class="${hasP ? "" : "hidden"}">
+      <label class="l" for="pWo">Werkorder</label><select id="pWo">${projOptions(hit ? hit.id : (tr && tr.fromPid) || "")}</select>
+      <div class="meta" style="margin-top:6px;font-weight:600">${hit ? `Voorgeselecteerd: je was hier eerder (${Math.round(near.d)} m van deze pin)` : near ? `Dichtstbijzijnde bekende locatie: ${esc(near.p.nr)} op ${near.d > 1000 ? (near.d / 1000).toFixed(1) + " km" : Math.round(near.d) + " m"}` : "Nog geen bekende locaties."}</div>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="pLink" ${hit ? "" : "checked"}> Deze locatie onthouden bij de werkorder</label>
+    </div>
+    <div id="pmN" class="${hasP ? "hidden" : ""}">
+      <div class="pair"><div><label class="l" for="pNr">Werkorder</label><input type="text" id="pNr" placeholder="bijv. OH26850-003" autocapitalize="characters"></div></div>
+      <label class="l" for="pNm">Omschrijving</label><input type="text" id="pNm" placeholder="bijv. Plein Evertshuis">
+    </div>
+    ${tr ? `<div class="card" style="margin:14px 0 0;padding:12px"><div style="display:flex;justify-content:space-between"><b>Reistijd</b><b class="num">${dec(trMins)} u</b></div>
+      <div class="meta num">${tr.fromPid ? esc(pnr(tr.fromPid)) + " → hier · " : ""}${hm(tr.since)} → ${hm(at)}</div>
+      <label class="check"><input type="checkbox" id="pTr" checked> Reistijd boeken op deze werkorder</label></div>` : ""}
+    <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="pGo">${I.play} Start uren</button></div>`, () => {
+    let mode = hasP ? "bestaand" : "nieuw";
+    $$("#sheet [data-m]").forEach(b => b.onclick = () => { mode = b.dataset.m; $$("#sheet [data-m]").forEach(x => x.classList.toggle("on", x === b)); $("#pmB").classList.toggle("hidden", mode !== "bestaand"); $("#pmN").classList.toggle("hidden", mode !== "nieuw"); });
+    $("#pGo").onclick = () => {
+      let pid;
+      if (mode === "nieuw") {
+        const nr = $("#pNr").value.trim(); if (!nr) { toast("Vul een werkorder in"); return; }
+        let p = S.projects.find(x => x.nr.toLowerCase() === nr.toLowerCase());
+        if (!p) { p = { id: uid("p"), nr, name: $("#pNm").value.trim(), active: true, indirect: false, locs: [], created: nowISO() }; S.projects.push(p); }
+        p.active = true; p.locs.push({ lat: pos.lat, lng: pos.lng, at }); pid = p.id;
+      } else {
+        pid = $("#pWo").value; if (!pid) { toast("Kies een werkorder"); return; }
+        if ($("#pLink") && $("#pLink").checked) P(pid).locs.push({ lat: pos.lat, lng: pos.lng, at });
+      }
+      stopRunning(at);
+      if (tr && $("#pTr") && $("#pTr").checked && trMins >= 1) startSeg(pid, tr.since, "reis").end = at;
+      S.travel = null;
+      startSeg(pid, at, "werk", pos);
+      save(); closeSheet(); toast("Uren lopen op " + pnr(pid)); go("vandaag", null, false);
+    };
+  });
+}
+function laptopSheet() {
+  const ps = activeProjects();
+  const k = dkey(new Date());
+  openSheet(`<h3>Werk zonder locatie</h3><p class="lead">Achter de laptop, indirecte uren of iets vergeten.</p>
+    <div class="seg" style="--n:2"><button data-m="timer" class="on">Timer</button><button data-m="hand">Handmatig</button></div>
+    <label class="l" for="lWo">Werkorder</label>
+    ${ps.length ? `<select id="lWo">${projOptions(ps[0].id)}</select>` : `<input type="text" id="lNew" placeholder="Nieuwe werkorder, bijv. IND-KENNISCENTRUM">`}
+    <div id="lHand" class="hidden">
+      <label class="l" for="lD">Datum</label><input type="date" id="lD" value="${k}">
+      <div class="pair"><div><label class="l" for="lA">Van</label><input type="time" id="lA" value="08:00"></div><div><label class="l" for="lB">Tot</label><input type="time" id="lB" value="09:00"></div></div>
+      <label class="l">Soort</label><div class="seg" style="--n:3" id="lK"><button data-k="werk" class="on">Werk</button><button data-k="reis">Reistijd</button><button data-k="overig">Overig</button></div>
+    </div>
+    ${S.travel ? `<label class="check"><input type="checkbox" id="lTr"> Reistijd sinds ${hm(S.travel.since)} meeboeken</label>` : ""}
+    <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="lGo">Start timer</button></div>`, () => {
+    let mode = "timer", kind = "werk";
+    $$("#sheet [data-m]").forEach(b => b.onclick = () => { mode = b.dataset.m; $$("#sheet [data-m]").forEach(x => x.classList.toggle("on", x === b)); $("#lHand").classList.toggle("hidden", mode !== "hand"); $("#lGo").textContent = mode === "hand" ? "Toevoegen" : "Start timer"; });
+    $$("#lK button").forEach(b => b.onclick = () => { kind = b.dataset.k; $$("#lK button").forEach(x => x.classList.toggle("on", x === b)); });
+    $("#lGo").onclick = () => {
+      let pid = $("#lWo") ? $("#lWo").value : null;
+      if (!pid) { const nr = ($("#lNew").value || "").trim(); if (!nr) return toast("Vul een werkorder in"); const p = { id: uid("p"), nr, name: "", active: true, indirect: true, locs: [], created: nowISO() }; S.projects.push(p); pid = p.id; }
+      if (mode === "hand") {
+        const d = $("#lD").value, a = $("#lA").value, b = $("#lB").value;
+        if (!d || !a || !b || b <= a) return toast("Controleer de tijden");
+        const s = startSeg(pid, combine(d, a), kind); s.end = combine(d, b);
+        save(); closeSheet(); toast("Toegevoegd"); render(); return;
+      }
+      const at = nowISO(); stopRunning(at);
+      if (S.travel && $("#lTr") && $("#lTr").checked) startSeg(pid, S.travel.since, "reis").end = at;
+      S.travel = null; startSeg(pid, at, "werk"); save(); closeSheet(); toast("Timer loopt op " + pnr(pid)); go("vandaag", null, false);
+    };
+  });
+}
+function switchSheet() {
+  const r = running(); if (!r) return;
+  openSheet(`<h3>Ander werk oppakken</h3><p class="lead">De klok van ${esc(pnr(r.pid))} stopt en loopt verder op de gekozen werkorder. Wissel later gewoon terug.</p>
+    <label class="l" for="wWo">Werkorder</label><select id="wWo">${projOptions(activeProjects().find(p => p.id !== r.pid)?.id)}</select>
+    <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="wGo">Wissel</button></div>`, () => {
+    $("#wGo").onclick = () => { const pid = $("#wWo").value; if (!pid || pid === r.pid) return closeSheet(); const at = nowISO(); stopRunning(at); startSeg(pid, at, "werk", r.lat ? { lat: r.lat, lng: r.lng } : null); save(); closeSheet(); toast("Nu op " + pnr(pid)); render(); };
+  });
+}
+function departSheet() {
+  const r = running(); if (!r) return;
+  const k = dkey(new Date());
+  const onP = segsOn(k).filter(s => s.pid === r.pid);
+  const tot = onP.reduce((a, s) => a + segMins(s), 0), reis = onP.filter(s => s.kind === "reis").reduce((a, s) => a + segMins(s), 0);
+  const linkedToday = S.notes.filter(n => n.pids.includes(r.pid) && dkey(n.created) === k).length;
+  openSheet(`<h3>Je verlaat ${esc(pnr(r.pid))}</h3>
+    <p class="lead num">Vandaag hier ${dec(tot)} u${reis ? ` · incl. ${dec(reis)} reis` : ""}</p>
+    <div class="q">Meting verricht?</div>
+    <div class="seg" id="dMv"><button data-v="1" class="on">Ja</button><button data-v="0">Nee</button></div>
+    <div id="dMeas"></div>
+    <button class="btn dash block" id="dAdd" style="margin-top:10px">+ Nog een meting</button>
+    ${linkedToday ? `<div class="notice" style="margin-top:12px"><b>${linkedToday} notitie${linkedToday > 1 ? "s" : ""}</b> vandaag bij deze werkorder gemaakt.</div>` : ""}
+    <button class="btn ghost block" id="dNote" style="margin-top:12px">${I.cam} Nog iets noteren of fotograferen</button>
+    <div class="actions" style="flex-direction:column"><button class="btn" id="dGo">Vertrek naar volgend project</button><button class="btn ghost" id="dEnd">Einde werkdag (geen reistijd)</button></div>`, () => {
+    let did = true; const rows = [];
+    const addRow = () => {
+      const i = rows.length; rows.push(i);
+      const div = document.createElement("div"); div.className = "card"; div.style.cssText = "margin:12px 0 0;padding:12px";
+      div.innerHTML = `<label class="l" style="margin-top:0" for="dN${i}">Naam meting</label><input type="text" id="dN${i}" placeholder="bijv. Bestaande toestand plein">
+        <div class="q" style="font-size:14px">Al geëxporteerd?</div><div class="seg" data-ex="${i}"><button data-v="1">Ja</button><button data-v="0" class="on">Nog niet</button></div>`;
+      $("#dMeas").appendChild(div);
+      div.querySelectorAll("[data-ex] button").forEach(b => b.onclick = () => div.querySelectorAll("[data-ex] button").forEach(x => x.classList.toggle("on", x === b)));
+    };
+    addRow();
+    $("#dAdd").onclick = addRow;
+    $$("#dMv button").forEach(b => b.onclick = () => { did = b.dataset.v === "1"; $$("#dMv button").forEach(x => x.classList.toggle("on", x === b)); $("#dMeas").classList.toggle("hidden", !did); $("#dAdd").classList.toggle("hidden", !did); });
+    const commit = travel => {
+      const at = nowISO();
+      if (did) rows.forEach(i => {
+        const name = ($("#dN" + i).value || "").trim(); if (!name) return;
+        const ex = $(`[data-ex="${i}"] button.on`).dataset.v === "1";
+        S.meas.push({ id: uid("m"), name, pids: [r.pid], steps: { gemeten: at, export: ex ? at : null, verwerkt: null, verzonden: null, projectmap: null }, created: at });
+      });
+      const from = r.pid; stopRunning(at);
+      S.travel = travel ? { since: at, fromPid: from } : null;
+      save(); closeSheet(); toast(travel ? "Goede reis – reistijd loopt" : "Werkdag afgesloten"); go("vandaag", null, false);
+    };
+    $("#dGo").onclick = () => commit(true);
+    $("#dEnd").onclick = () => commit(false);
+    $("#dNote").onclick = () => { closeSheet(); noteSheet(newNote({ pids: [r.pid] }), { after: departSheet }); };
+  });
+}
+
+/* =================== PROJECTEN + METINGEN =================== */
+function rProjecten() {
+  setTop("Projecten", "");
+  let h = `<div class="vseg" style="margin-bottom:12px"><button data-pt="lijst" class="${ui.projTab === "lijst" ? "on" : ""}">Werkorders</button><button data-pt="metingen" class="${ui.projTab === "metingen" ? "on" : ""}">Metingen</button></div>`;
+  if (ui.projTab === "lijst") {
+    const act = activeProjects(), arch = S.projects.filter(p => p.active === false);
+    h += `<div class="card"><h2>Actief <small>${act.length}</small></h2>`;
+    if (!act.length) h += `<div class="empty">Nog geen werkorders. Tik op + om er een toe te voegen.</div>`;
+    act.forEach(p => {
+      const om = measOfProject(p.id).filter(m => nextStep(m)).length, nn = notesOfProject(p.id).length, ot = S.tasks.filter(t => t.pid === p.id && !t.done).length;
+      h += `<div class="row click" data-act="openproj" data-id="${p.id}"><div class="tx"><b>${esc(p.nr)}</b> ${esc(p.name)}<small>${p.indirect ? "indirect · " : `${(p.locs || []).length} locatie${(p.locs || []).length === 1 ? "" : "s"} · `}${om} meting${om === 1 ? "" : "en"} open · ${nn} notitie${nn === 1 ? "" : "s"}${ot ? ` · ${ot} ta${ot === 1 ? "ak" : "ken"}` : ""}</small></div><span aria-hidden="true" style="color:var(--muted)">›</span></div>`;
+    });
+    h += `</div>`;
+    if (arch.length) { h += `<div class="card"><h2>Archief <small>${arch.length}</small></h2>${arch.map(p => `<div class="row click" data-act="openproj" data-id="${p.id}"><div class="tx" style="color:var(--muted)"><b>${esc(p.nr)}</b> ${esc(p.name)}</div></div>`).join("")}</div>`; }
+    setFab(() => projectSheet());
+  } else {
+    const F = { open: ["Open", m => nextStep(m)], export: ["Niet geëxporteerd", m => m.steps.gemeten && !m.steps.export], verwerken: ["Te verwerken", m => m.steps.export && !m.steps.verwerkt], verzenden: ["Te verzenden / map", m => m.steps.verwerkt && (!m.steps.verzonden || !m.steps.projectmap)], klaar: ["Klaar", m => !nextStep(m)], alle: ["Alle", () => true] };
+    h += `<div class="tabs">${Object.entries(F).map(([k, [l, f]]) => `<button data-mf="${k}" class="${ui.measFilter === k ? "on" : ""}">${l} · ${S.meas.filter(f).length}</button>`).join("")}</div>`;
+    const list = S.meas.filter(F[ui.measFilter][1]).sort((a, b) => (b.steps.gemeten || b.created).localeCompare(a.steps.gemeten || a.created));
+    if (!list.length) h += `<div class="empty">Geen metingen in deze lijst.</div>`;
+    list.forEach(m => h += measCard(m));
+    setFab(() => measNewSheet());
+  }
+  $("#main").innerHTML = h;
+}
+function measCard(m) {
+  const nn = notesOfMeas(m.id).length;
+  return `<div class="card click" data-act="openmeas" data-id="${m.id}">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:10px">
+      <div class="tx"><b style="font-size:15px">${esc(m.name)}</b><small>${m.pids.map(id => esc(pnr(id))).join(" + ") || "geen werkorder"} · ${m.steps.gemeten ? dtShort(m.steps.gemeten) : "nog niet gemeten"}${nn ? ` · ${nn} notitie${nn > 1 ? "s" : ""}` : ""}</small></div>${measPill(m)}</div>
+    ${stepsBar(m)}</div>`;
+}
+function projectSheet(p) {
+  const isNew = !p; p = p || { nr: "", name: "", indirect: false, active: true, locs: [] };
+  openSheet(`<h3>${isNew ? "Nieuwe werkorder" : "Werkorder bewerken"}</h3>
+    <label class="l" for="eNr">Werkorder</label><input type="text" id="eNr" value="${esc(p.nr)}" placeholder="bijv. OH26850-003" autocapitalize="characters">
+    <label class="l" for="eNm">Omschrijving</label><input type="text" id="eNm" value="${esc(p.name)}" placeholder="bijv. Plein Evertshuis">
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="eInd" ${p.indirect ? "checked" : ""}> Indirect / geen vaste locatie (bijv. IND-KENNISCENTRUM)</label>
+    ${isNew ? `<label class="check"><input type="checkbox" id="eLoc"> Huidige locatie koppelen</label>` : `<label class="check"><input type="checkbox" id="eAct" ${p.active !== false ? "checked" : ""}> Actief (zichtbaar in keuzelijsten)</label>`}
+    ${!isNew && (p.locs || []).length ? `<div class="q">Gekoppelde locaties</div>${p.locs.map((l, i) => `<div class="row"><span class="tx num">${fmtLL(l.lat, l.lng)}<small>${l.at ? dtShort(l.at) : ""}</small></span><button class="mini" data-rl="${i}">Verwijder</button></div>`).join("")}` : ""}
+    <div class="actions">${isNew ? `<button class="btn ghost" data-act="close">Annuleer</button>` : `<button class="btn danger" id="eDel">Verwijder</button>`}<button class="btn" id="eOk">Opslaan</button></div>`, () => {
+    $$("#sheet [data-rl]").forEach(b => b.onclick = () => { p.locs.splice(+b.dataset.rl, 1); save(); projectSheet(p); });
+    $("#eOk").onclick = async () => {
+      const nr = $("#eNr").value.trim(); if (!nr) return toast("Vul een werkorder in");
+      const dup = S.projects.find(x => x.nr.toLowerCase() === nr.toLowerCase() && x !== p); if (dup) return toast("Die werkorder bestaat al");
+      p.nr = nr; p.name = $("#eNm").value.trim(); p.indirect = $("#eInd").checked;
+      if (isNew) {
+        p.id = uid("p"); p.created = nowISO(); S.projects.push(p);
+        if ($("#eLoc").checked) { try { const pos = await getPos(); p.locs.push({ lat: pos.lat, lng: pos.lng, at: nowISO() }); } catch (e) { toast(e.message); } }
+      } else p.active = $("#eAct").checked;
+      save(); closeSheet(); render();
+    };
+    if ($("#eDel")) $("#eDel").onclick = () => confirmSheet(`werkorder ${p.nr}`, () => {
+      S.projects = S.projects.filter(x => x !== p); S.segs = S.segs.filter(s => s.pid !== p.id);
+      S.meas.forEach(m => m.pids = m.pids.filter(i => i !== p.id)); S.notes.forEach(n => n.pids = n.pids.filter(i => i !== p.id)); S.tasks.forEach(t => { if (t.pid === p.id) t.pid = ""; });
+      save(); closeSheet(); back.length = 0; go("projecten", null, false);
+    }, "Geboekte uren op deze werkorder worden ook verwijderd. Metingen, notities en taken blijven bestaan.");
+  });
+}
+function confirmSheet(what, yes, extra) {
+  openSheet(`<h3>Verwijderen?</h3><p class="lead">Weet je zeker dat je ${esc(what)} wilt verwijderen?${extra ? " " + esc(extra) : ""}</p><div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn danger" id="cY">Verwijder</button></div>`, () => $("#cY").onclick = yes);
+}
+function rProject() {
+  const p = P(view.id); if (!p) return goBack();
+  setTop(p.name || p.nr, p.name ? p.nr : (p.indirect ? "indirect" : ""), { back: true });
+  const ms = measOfProject(p.id), ns = notesOfProject(p.id).sort((a, b) => b.created.localeCompare(a.created)), ts = S.tasks.filter(t => t.pid === p.id);
+  const mon = mondayOf(new Date()).getTime();
+  const all = S.segs.filter(s => s.pid === p.id);
+  const wk = all.filter(s => new Date(s.start).getTime() >= mon).reduce((a, s) => a + segMins(s), 0), tot = all.reduce((a, s) => a + segMins(s), 0);
+  const tab = view.tab || "overzicht";
+  let h = `<div class="tabs">${[["overzicht", "Overzicht"], ["metingen", "Metingen " + ms.length], ["notities", "Notities " + ns.length], ["taken", "Taken " + ts.filter(t => !t.done).length], ["uren", "Uren"]].map(([k, l]) => `<button data-ptab="${k}" class="${tab === k ? "on" : ""}">${l}</button>`).join("")}</div>`;
+  const nxt = ms.map(m => [m, nextStep(m)]).find(x => x[1]);
+  if (tab === "overzicht") {
+    if (nxt) h += `<div class="next click" data-act="openmeas" data-id="${nxt[0].id}"><b>Volgende stap:</b> ${esc(nxt[0].name)} – ${esc(nxt[1][1].toLowerCase())}</div>`;
+    h += `<div class="card"><h2>Metingen <small>${ms.length}</small></h2>${ms.slice(0, 4).map(m => `<div class="row click" data-act="openmeas" data-id="${m.id}"><div class="tx"><b>${esc(m.name)}</b><small>${m.steps.gemeten ? dtShort(m.steps.gemeten) : "nog niet gemeten"}${m.pids.length > 1 ? " · ook " + m.pids.filter(i => i !== p.id).map(i => esc(pnr(i))).join(", ") : ""}</small></div>${measPill(m)}</div>`).join("") || `<div class="empty">Nog geen metingen.</div>`}
+      <button class="btn dash block" data-act="newmeas" data-pid="${p.id}" style="margin-top:8px">+ Meting</button></div>`;
+    h += `<div class="card"><h2>Veldnotities <small>${ns.length}</small></h2>${ns.slice(0, 3).map(noteRow).join("") || `<div class="empty">Nog geen notities.</div>`}
+      <button class="btn dash block" data-act="newnote" data-pid="${p.id}" style="margin-top:8px">+ Notitie</button></div>`;
+    h += `<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div class="tx"><b>Uren</b><small>deze week · totaal</small></div><b class="num" style="font-size:17px">${dec(wk)} · ${dec(tot)}</b></div>`;
+    h += `<div class="card"><div class="row" style="padding:0"><div class="tx"><b>${esc(p.nr)}</b> ${esc(p.name)}<small>${p.indirect ? "indirect" : (p.locs || []).length + " gekoppelde locatie(s)"} · ${p.active === false ? "gearchiveerd" : "actief"}</small></div><button class="mini" data-act="editproj" data-id="${p.id}">Bewerk</button></div></div>`;
+  } else if (tab === "metingen") {
+    h += ms.map(measCard).join("") || `<div class="empty">Nog geen metingen.</div>`;
+    setFab(() => measNewSheet(p.id));
+  } else if (tab === "notities") {
+    h += ns.length ? `<div class="ncards">${ns.map(noteCard).join("")}</div>` : `<div class="empty">Nog geen notities.</div>`;
+    setFab(() => noteSheet(newNote({ pids: [p.id] })));
+  } else if (tab === "taken") {
+    h += `<div class="card">${ts.map(taskRow).join("") || `<div class="empty">Geen taken.</div>`}</div>`;
+    setFab(() => taskSheet(null, { pid: p.id }));
+  } else {
+    const days = {}; all.forEach(s => { const k = dkey(s.start); days[k] = (days[k] || 0) + segMins(s); });
+    const keys = Object.keys(days).sort().reverse();
+    h += `<div class="card"><table class="st"><thead><tr><th>Datum</th><th class="r">Uren</th></tr></thead><tbody>${keys.map(k => `<tr class="click" data-act="gouren" data-k="${k}"><td>${dShort(k)}</td><td class="r num">${dec(days[k])}</td></tr>`).join("") || `<tr><td colspan="2" class="empty">Nog geen uren.</td></tr>`}</tbody><tfoot><tr><td>Totaal</td><td class="r num">${dec(tot)}</td></tr></tfoot></table></div>`;
+  }
+  $("#main").innerHTML = h;
+}
+function measNewSheet(pid) {
+  const r = running();
+  pid = pid || (r && r.pid) || "";
+  openSheet(`<h3>Nieuwe meting</h3>
+    <label class="l" for="mN">Naam</label><input type="text" id="mN" placeholder="bijv. Revisie riool streng 4-7">
+    <label class="l" for="mP">Werkorder</label><select id="mP">${projOptions(pid, { none: "– kies –" })}</select>
+    <div class="q">Status</div><div class="seg" style="--n:3" id="mS"><button data-s="0">Gepland</button><button data-s="1" class="on">Gemeten</button><button data-s="2">Geëxporteerd</button></div>
+    <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="mOk">Opslaan</button></div>`, () => {
+    let st = 1; $$("#mS button").forEach(b => b.onclick = () => { st = +b.dataset.s; $$("#mS button").forEach(x => x.classList.toggle("on", x === b)); });
+    $("#mOk").onclick = () => {
+      const name = $("#mN").value.trim(); if (!name) return toast("Geef de meting een naam");
+      const at = nowISO(), pv = $("#mP").value;
+      const m = { id: uid("m"), name, pids: pv ? [pv] : [], steps: { gemeten: st >= 1 ? at : null, export: st >= 2 ? at : null, verwerkt: null, verzonden: null, projectmap: null }, created: at };
+      S.meas.push(m); save(); closeSheet(); go("meting", { id: m.id });
+    };
+  });
+}
+function rMeting() {
+  const m = M(view.id); if (!m) return goBack();
+  setTop(m.name, m.steps.gemeten ? "Gemeten " + dtShort(m.steps.gemeten) : "Nog niet gemeten", { back: true });
+  const nxt = nextStep(m);
+  let h = `<div class="card">${stepsBar(m)}
+    ${nxt ? `<button class="btn block" data-act="stepnow" data-k="${nxt[0]}" style="margin-top:12px">Markeer: ${esc(nxt[1].toLowerCase())}</button>` : `<div class="notice" style="margin:12px 0 0">Alle stappen afgerond.</div>`}
+    ${m.pids.length ? `<button class="btn ghost block" data-act="workon" style="margin-top:8px">${I.play} Start uren: uitwerken op ${esc(pnr(m.pids[0]))}</button>` : ""}</div>`;
+  h += `<div class="sec">Status · tik om te wijzigen</div><div class="card" style="padding:6px 14px">${STEPS.map(([k, l]) => `<div class="row">
+    <button class="box ${m.steps[k] ? "ok" : nxt && nxt[0] === k ? "open" : ""}" data-act="steptoggle" data-k="${k}" aria-label="${esc(l)} ${m.steps[k] ? "uitzetten" : "afvinken"}">${m.steps[k] ? I.check : ""}</button>
+    <span class="tx"><b>${l}</b></span>
+    ${m.steps[k] ? `<input type="datetime-local" data-stepdt="${k}" value="${toLocalInput(m.steps[k])}" style="width:auto;max-width:190px;padding:6px 8px;font-size:13px" aria-label="Datum ${esc(l)}">` : ""}</div>`).join("")}</div>`;
+  h += `<div class="sec">Valt onder werkorders</div><div class="card"><div class="chipsel">${m.pids.map(id => `<span class="c">${esc(pnr(id))}<button data-act="unlinkmp" data-id="${id}" aria-label="Ontkoppel ${esc(pnr(id))}">${I.x}</button></span>`).join("")}<button class="add" data-act="linkmp">+ Werkorder</button></div>
+    ${m.pids.length > 1 ? `<div class="meta" style="margin-top:8px">Eén meting, administratief op meerdere werkorders.</div>` : ""}</div>`;
+  const ns = notesOfMeas(m.id);
+  h += `<div class="sec">Veldwerk bij deze meting</div>`;
+  if (!ns.length) h += `<div class="empty">Nog geen notities gekoppeld.</div>`;
+  ns.forEach(n => {
+    h += `<div class="card"><div style="display:flex;align-items:center;gap:10px">${n.action ? `<input type="checkbox" data-act="actiondone" data-id="${n.id}" ${n.actionDone ? "checked" : ""} aria-label="Actiepunt afgehandeld" style="width:20px;height:20px;accent-color:var(--accent)">` : ""}
+      <span class="tx click" data-act="opennote" data-id="${n.id}"><b>${esc(n.title || "Notitie")}</b><small>${dtShort(n.created)}</small></span>${n.action ? `<span class="pill ${n.actionDone ? "ok" : "warn"}">${n.actionDone ? "Afgehandeld" : "Actiepunt"}</span>` : ""}
+      <button class="mini" data-act="unlinkmn" data-id="${n.id}">Ontkoppel</button></div>
+      ${n.body ? `<div style="white-space:pre-wrap;font-size:14px;line-height:1.45;margin-top:8px">${esc(n.body)}</div>` : ""}
+      ${n.photos.length ? `<div class="thumbs">${n.photos.map(pid => `<div class="thumb" data-act="viewphoto" data-id="${pid}"><img data-ph="${pid}" alt="Foto"></div>`).join("")}</div>` : ""}</div>`;
+  });
+  h += `<div class="grid2"><button class="btn dash" data-act="linkmn">+ Bestaande notitie</button><button class="btn dash" data-act="newnote" data-mid="${m.id}">+ Nieuwe notitie</button></div>
+    <div class="actions"><button class="btn ghost" data-act="renamemeas">Naam wijzigen</button><button class="btn danger" data-act="delmeas">Verwijder</button></div>`;
+  $("#main").innerHTML = h;
+  $$("[data-stepdt]").forEach(inp => inp.onchange = () => { const v = fromLocalInput(inp.value); if (v) { m.steps[inp.dataset.stepdt] = v; save(); toast("Datum aangepast"); } });
+}
+function pickSheet(title, items, onPick, emptyText) {
+  openSheet(`<h3>${esc(title)}</h3>${items.length > 6 ? `<input type="search" id="pkQ" placeholder="Zoek…" style="margin:6px 0 4px">` : ""}<div id="pkL">${items.map(i => `<div class="row click" data-pk="${i.id}"><div class="tx"><b>${esc(i.t)}</b>${i.s ? `<small>${esc(i.s)}</small>` : ""}</div></div>`).join("") || `<div class="empty">${esc(emptyText || "Niets om te kiezen.")}</div>`}</div>
+    <div class="actions"><button class="btn ghost" data-act="close">Sluit</button></div>`, () => {
+    $$("#sheet [data-pk]").forEach(r => r.onclick = () => onPick(r.dataset.pk));
+    if ($("#pkQ")) $("#pkQ").oninput = e => { const q = e.target.value.toLowerCase(); $$("#sheet [data-pk]").forEach(r => r.classList.toggle("hidden", !r.textContent.toLowerCase().includes(q))); };
+  });
+}
+
+/* =================== NOTITIES + FOTO'S =================== */
+function newNote(o) { return Object.assign({ id: null, title: "", body: "", pids: [], mids: [], action: false, actionDone: false, photos: [], created: nowISO() }, o || {}); }
+function noteRow(n) {
+  return `<div class="row click" data-act="opennote" data-id="${n.id}">${n.photos[0] ? `<div class="thumb" style="width:56px;flex:none"><img data-ph="${n.photos[0]}" alt=""></div>` : ""}<div class="tx"><b>${esc(n.title || "Notitie")}</b><small>${esc((n.body || "").slice(0, 80)) || dtShort(n.created)}</small></div>${n.action && !n.actionDone ? `<span class="pill warn">Actiepunt</span>` : ""}</div>`;
+}
+function noteCard(n) {
+  return `<div class="ncard" data-act="opennote" data-id="${n.id}">${n.photos[0] ? `<div class="ph"><img data-ph="${n.photos[0]}" alt=""></div>` : ""}
+    <div class="bd"><b>${esc(n.title || "Notitie")}</b>${n.body && !n.photos[0] ? `<p>${esc(n.body)}</p>` : ""}
+    <div class="tags">${n.pids.map(id => `<span class="pill mid">${esc(pnr(id))}</span>`).join("")}${n.mids.length ? `<span class="pill mid">${n.mids.length} meting</span>` : ""}${n.photos.length > 1 ? `<span class="pill mid">${n.photos.length} foto's</span>` : ""}${n.action && !n.actionDone ? `<span class="pill warn">Actiepunt</span>` : ""}</div>
+    <span class="meta">${dtShort(n.created)}</span></div></div>`;
+}
+function rNotities() {
+  setTop("Notities", "");
+  const used = [...new Set(S.notes.flatMap(n => n.pids))].filter(P).sort((a, b) => pnr(a).localeCompare(pnr(b)));
+  let h = `<input type="search" id="nQ" placeholder="Zoek in notities…" value="${esc(ui.noteQ)}" style="margin-bottom:10px" aria-label="Zoek in notities">
+    <div class="tabs"><button data-nf="alle" class="${ui.noteFilter === "alle" ? "on" : ""}">Alle</button><button data-nf="actie" class="${ui.noteFilter === "actie" ? "on" : ""}">Actiepunten · ${S.notes.filter(n => n.action && !n.actionDone).length}</button><button data-nf="los" class="${ui.noteFilter === "los" ? "on" : ""}">Zonder werkorder</button>${used.map(id => `<button data-nf="${id}" class="${ui.noteFilter === id ? "on" : ""}">${esc(pnr(id))}</button>`).join("")}</div>`;
+  const q = ui.noteQ.toLowerCase();
+  const list = S.notes.filter(n => ui.noteFilter === "alle" || (ui.noteFilter === "actie" ? n.action && !n.actionDone : ui.noteFilter === "los" ? !n.pids.length : n.pids.includes(ui.noteFilter)))
+    .filter(n => !q || (n.title + " " + n.body + " " + n.pids.map(pnr).join(" ")).toLowerCase().includes(q))
+    .sort((a, b) => b.created.localeCompare(a.created));
+  h += list.length ? `<div class="ncards">${list.map(noteCard).join("")}</div>` : `<div class="empty">Geen notities${q ? " gevonden" : ""}. Tik op + voor een nieuwe veldnotitie.</div>`;
+  $("#main").innerHTML = h;
+  $("#nQ").oninput = e => { ui.noteQ = e.target.value; const pos = e.target.selectionStart; rNotities(); fillThumbs(); const el = $("#nQ"); el.focus(); el.setSelectionRange(pos, pos); };
+  setFab(() => { const r = running(); noteSheet(newNote({ pids: r ? [r.pid] : [] })); });
+}
+let pendingPhotoNote = null;
+function noteSheet(n, opts = {}) {
+  const isNew = !n.id;
+  const draft = JSON.parse(JSON.stringify(n));
+  const draw = () => {
+    openSheet(`<div style="display:flex;justify-content:space-between;align-items:center"><h3>Veldnotitie</h3><span class="meta">${dtShort(draft.created)}</span></div>
+      <label class="l" for="nT">Titel</label><input type="text" id="nT" value="${esc(draft.title)}" placeholder="bijv. Putdeksel afwijkend">
+      <label class="l">Gekoppeld aan</label>
+      <div class="chipsel">${draft.pids.map(id => `<span class="c">${esc(pnr(id))}<button data-up="${id}" aria-label="Ontkoppel">${I.x}</button></span>`).join("")}${draft.mids.map(id => `<span class="c">Meting: ${esc((M(id) || {}).name || "?")}<button data-um="${id}" aria-label="Ontkoppel">${I.x}</button></span>`).join("")}
+        <button class="add" id="nLp">+ Werkorder</button><button class="add" id="nLm">+ Meting</button></div>
+      <label class="l" for="nB">Notitie</label><textarea id="nB" rows="5" placeholder="Wat moet je weten bij het uitwerken?">${esc(draft.body)}</textarea>
+      <label class="l">Foto's</label>
+      <div class="thumbs" style="margin-top:0">${draft.photos.map(pid => `<div class="thumb" data-vp="${pid}"><img data-ph="${pid}" alt="Foto"><span class="loc" data-locb="${pid}"></span></div>`).join("")}
+        <button class="thumb" id="nCam" style="border:1.5px dashed var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:800;font-size:13px;background:var(--bg)">${I.cam}Camera</button>
+        <button class="thumb" id="nGal" style="border:1.5px dashed var(--line2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:800;font-size:13px;background:var(--bg)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Galerij</button></div>
+      <div class="meta" style="margin-top:6px">Bij elke foto worden tijd en locatie bewaard en bij export in de foto gezet.</div>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="nA" ${draft.action ? "checked" : ""}> Actiepunt voor uitwerken (komt ook in Taken)</label>
+      <div class="actions">${isNew ? `<button class="btn ghost" id="nX">Annuleer</button>` : `<button class="btn danger" id="nDel">Verwijder</button>`}<button class="btn" id="nOk">Opslaan</button></div>`, () => {
+      fillThumbs(sheet);
+      draft.photos.forEach(async pid => { const p = await DB.photoGet(pid); const b = sheet.querySelector(`[data-locb="${pid}"]`); if (b && p) { if (typeof p.lat === "number") b.textContent = hm(p.taken); else { b.textContent = "geen locatie"; b.classList.add("no"); } } });
+      const keep = () => { draft.title = $("#nT").value.trim(); draft.body = $("#nB").value; draft.action = $("#nA").checked; };
+      $$("#sheet [data-up]").forEach(b => b.onclick = () => { keep(); draft.pids = draft.pids.filter(i => i !== b.dataset.up); draw(); });
+      $$("#sheet [data-um]").forEach(b => b.onclick = () => { keep(); draft.mids = draft.mids.filter(i => i !== b.dataset.um); draw(); });
+      $("#nLp").onclick = () => { keep(); pickSheet("Koppel werkorder", activeProjects().filter(p => !draft.pids.includes(p.id)).map(p => ({ id: p.id, t: p.nr, s: p.name })), id => { draft.pids.push(id); draw(); }, "Geen (andere) actieve werkorders."); };
+      $("#nLm").onclick = () => { keep(); const ms = S.meas.filter(m => !draft.mids.includes(m.id)).sort((a, b) => (draft.pids.some(p => b.pids.includes(p)) - draft.pids.some(p => a.pids.includes(p))) || b.created.localeCompare(a.created)); pickSheet("Koppel meting", ms.map(m => ({ id: m.id, t: m.name, s: m.pids.map(pnr).join(" + ") })), id => { draft.mids.push(id); const mm = M(id); mm.pids.forEach(p => { if (!draft.pids.includes(p)) draft.pids.push(p); }); draw(); }, "Nog geen metingen."); };
+      $("#nCam").onclick = () => { keep(); pendingPhotoNote = { draft, draw, source: "camera" }; $("#camIn").value = ""; $("#camIn").click(); };
+      $("#nGal").onclick = () => { keep(); pendingPhotoNote = { draft, draw, source: "galerij" }; $("#galIn").value = ""; $("#galIn").click(); };
+      $$("#sheet [data-vp]").forEach(t => t.onclick = () => { keep(); photoViewer(t.dataset.vp, { onRemove: () => { draft.photos = draft.photos.filter(x => x !== t.dataset.vp); draft._removed = (draft._removed || []).concat(t.dataset.vp); draw(); }, onBack: draw }); });
+      const cancel = async () => {
+        // nieuw toegevoegde foto's bij annuleren weggooien
+        const orig = new Set(n.photos);
+        for (const pid of draft.photos) if (!orig.has(pid)) await DB.photoDel(pid);
+        closeSheet(); if (opts.after) opts.after();
+      };
+      if ($("#nX")) $("#nX").onclick = cancel;
+      $("#nOk").onclick = async () => {
+        keep();
+        if (!draft.title && !draft.body && !draft.photos.length) return toast("Notitie is leeg");
+        if (!draft.title) draft.title = (draft.body.split("\n")[0] || "Foto's " + dtShort(draft.created)).slice(0, 60);
+        for (const pid of draft._removed || []) await DB.photoDel(pid);
+        delete draft._removed; draft.updated = nowISO();
+        let target = isNew ? null : N(n.id);
+        if (!target) { draft.id = uid("n"); S.notes.push(draft); target = draft; } else Object.assign(target, draft);
+        syncActionTask(target);
+        save(); closeSheet(); toast("Notitie opgeslagen"); if (opts.after) opts.after(target); else render();
+      };
+      if ($("#nDel")) $("#nDel").onclick = () => confirmSheet("deze notitie en de foto's", async () => {
+        for (const pid of n.photos) await DB.photoDel(pid);
+        S.notes = S.notes.filter(x => x.id !== n.id); S.tasks = S.tasks.filter(t => t.noteId !== n.id);
+        save(); closeSheet(); render();
+      });
+    });
+  };
+  draw();
+}
+function syncActionTask(n) {
+  let t = S.tasks.find(x => x.noteId === n.id);
+  if (n.action && !t) S.tasks.push({ id: uid("t"), title: n.title, due: "", done: !!n.actionDone, pid: n.pids[0] || "", mid: n.mids[0] || "", noteId: n.id, created: nowISO() });
+  else if (n.action && t) { t.title = n.title; if (!t.pid && n.pids[0]) t.pid = n.pids[0]; }
+  else if (!n.action && t && !t.done) S.tasks = S.tasks.filter(x => x !== t);
+}
+async function makeThumb(blob) {
+  try {
+    const bmp = await createImageBitmap(blob, { imageOrientation: "from-image" });
+    const s = 360 / Math.max(bmp.width, bmp.height); const w = Math.round(bmp.width * Math.min(1, s)), h = Math.round(bmp.height * Math.min(1, s));
+    const c = document.createElement("canvas"); c.width = w; c.height = h; c.getContext("2d").drawImage(bmp, 0, 0, w, h);
+    return await new Promise(r => c.toBlob(r, "image/jpeg", .78));
+  } catch (e) {
+    try {
+      const url = URL.createObjectURL(blob); const img = new Image(); img.src = url; await img.decode();
+      const s = 360 / Math.max(img.naturalWidth, img.naturalHeight); const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * Math.min(1, s)); c.height = Math.round(img.naturalHeight * Math.min(1, s));
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+      return await new Promise(r => c.toBlob(r, "image/jpeg", .78));
+    } catch (e2) { return null; }
+  }
+}
+async function handlePhotos(files, source) {
+  const ctx = pendingPhotoNote; pendingPhotoNote = null; if (!ctx || !files.length) return;
+  toast(files.length > 1 ? `${files.length} foto's verwerken…` : "Foto verwerken…");
+  // camera: huidige locatie gebruiken; galerij: eerst EXIF, anders vragen
+  const posP = source === "camera" ? getPos({ maximumAge: 10000, timeout: 15000 }).catch(() => null) : Promise.resolve(null);
+  let pos = await posP;
+  for (const f of files) {
+    const u8 = new Uint8Array(await f.arrayBuffer());
+    const ex = VWLib.readExif(u8);
+    const rec = { id: uid("f"), blob: f.slice(0, f.size, f.type || "image/jpeg"), type: f.type || "image/jpeg", name: f.name || "foto.jpg", taken: ex.taken || (source === "camera" ? nowISO() : new Date(f.lastModified || Date.now()).toISOString()), lat: null, lng: null, acc: null, alt: null, locSource: "none", exifGps: typeof ex.lat === "number" };
+    if (typeof ex.lat === "number") { rec.lat = ex.lat; rec.lng = ex.lng; rec.locSource = "exif"; }
+    else if (pos) { rec.lat = pos.lat; rec.lng = pos.lng; rec.acc = pos.acc; rec.alt = pos.alt; rec.locSource = "app-gps"; }
+    rec.thumb = await makeThumb(rec.blob);
+    await DB.photoPut(rec);
+    ctx.draft.photos.push(rec.id);
+  }
+  if (source === "galerij") {
+    const missing = [];
+    for (const id of ctx.draft.photos) { const p = await DB.photoGet(id); if (p && typeof p.lat !== "number") missing.push(id); }
+    if (missing.length) { ctx.draw(); askLocFor(missing, ctx.draw); return; }
+  }
+  if (source === "camera" && !pos) toast("Foto bewaard, maar locatie niet gevonden");
+  ctx.draw();
+}
+function askLocFor(ids, after) {
+  openSheet(`<h3>Locatie ontbreekt</h3><p class="lead">${ids.length} foto${ids.length > 1 ? "'s hebben" : " heeft"} geen locatie in de bestandsgegevens (de telefoon heeft die er mogelijk uitgehaald).</p>
+    <div class="actions" style="flex-direction:column"><button class="btn" id="aNow">Gebruik mijn huidige locatie</button><button class="btn ghost" id="aSkip">Zonder locatie bewaren</button></div>`, () => {
+    $("#aSkip").onclick = after;
+    $("#aNow").onclick = async () => { try { const pos = await getPos(); for (const id of ids) { const p = await DB.photoGet(id); Object.assign(p, { lat: pos.lat, lng: pos.lng, acc: pos.acc, alt: pos.alt, locSource: "app-gps" }); await DB.photoPut(p); } toast("Locatie toegevoegd"); } catch (e) { toast(e.message); } after(); };
+  });
+}
+$("#camIn").addEventListener("change", e => handlePhotos([...e.target.files], "camera"));
+$("#galIn").addEventListener("change", e => handlePhotos([...e.target.files], "galerij"));
+async function photoViewer(id, o = {}) {
+  const p = await DB.photoGet(id); if (!p) return;
+  const u = await photoURL(id, true);
+  const src = { exif: "uit de foto zelf", "app-gps": "door de app vastgelegd", none: "onbekend" }[p.locSource] || "";
+  openSheet(`<div class="viewer"><img src="${u}" alt="Foto"></div>
+    <div class="meta num" style="margin-top:10px;line-height:1.6">Gemaakt: ${dtShort(p.taken)}<br>Locatie: ${typeof p.lat === "number" ? `${fmtLL(p.lat, p.lng)}${p.acc ? " ±" + Math.round(p.acc) + " m" : ""} (${src})` : "geen"}<br>Bestand: ${esc(p.name)}</div>
+    <div class="actions">${o.onRemove ? `<button class="btn danger" id="vRm">Verwijder foto</button>` : ""}<button class="btn ghost" id="vBk">Terug</button></div>
+    ${typeof p.lat !== "number" ? `<button class="btn dash block" id="vLoc" style="margin-top:8px">Huidige locatie toevoegen</button>` : ""}`, () => {
+    $("#vBk").onclick = () => o.onBack ? o.onBack() : closeSheet();
+    if ($("#vRm")) $("#vRm").onclick = () => o.onRemove();
+    if ($("#vLoc")) $("#vLoc").onclick = async () => { try { const pos = await getPos(); Object.assign(p, { lat: pos.lat, lng: pos.lng, acc: pos.acc, locSource: "app-gps" }); await DB.photoPut(p); toast("Locatie toegevoegd"); photoViewer(id, o); } catch (e) { toast(e.message); } };
+  });
+}
+
+/* =================== TAKEN =================== */
+function taskRow(t) {
+  const n = t.noteId ? N(t.noteId) : null;
+  const k = dkey(new Date());
+  const dueTxt = !t.due ? "" : t.due === k ? "vandaag" : t.due < k ? "te laat · " + dShort(t.due) : dShort(t.due);
+  return `<div class="row ${t.done ? "done" : ""}"><input type="checkbox" data-act="taskdone" data-id="${t.id}" ${t.done ? "checked" : ""} aria-label="Afvinken">
+    <div class="tx click" data-act="opentask" data-id="${t.id}">${esc(t.title)}${dueTxt || n || t.mid ? `<small>${[dueTxt, t.mid && M(t.mid) ? "meting " + esc(M(t.mid).name) : "", n ? "1 notitie" : ""].filter(Boolean).join(" · ")}</small>` : ""}</div>
+    ${t.pid && P(t.pid) ? `<span class="pill wo">${esc(pnr(t.pid))}</span>` : ""}
+    ${S.settings.ttMail ? `<button class="mini ${t.tt ? "sent" : ""}" data-act="tt" data-id="${t.id}">${t.tt ? "✓ TT" : "→ TT"}</button>` : ""}</div>`;
+}
+function rTaken() {
+  setTop("Taken", "");
+  const k = dkey(new Date());
+  const used = [...new Set(S.tasks.map(t => t.pid).filter(Boolean))].filter(P);
+  let h = `<div class="tabs"><button data-tf="alle" class="${ui.taskFilter === "alle" ? "on" : ""}">Alle</button><button data-tf="vandaag" class="${ui.taskFilter === "vandaag" ? "on" : ""}">Vandaag</button>${used.map(id => `<button data-tf="${id}" class="${ui.taskFilter === id ? "on" : ""}">${esc(pnr(id))}</button>`).join("")}</div>`;
+  const f = t => ui.taskFilter === "alle" || (ui.taskFilter === "vandaag" ? t.due && t.due <= k : t.pid === ui.taskFilter);
+  const open = S.tasks.filter(t => !t.done && f(t)).sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999"));
+  const done = S.tasks.filter(t => t.done && f(t)).sort((a, b) => (b.doneAt || "").localeCompare(a.doneAt || "")).slice(0, 15);
+  h += `<div class="card"><h2>Takenlijst <small>${open.length} open</small></h2>${open.map(taskRow).join("") || `<div class="empty">Niets open. Lekker bezig.</div>`}</div>`;
+  if (done.length) h += `<div class="card"><h2>Afgerond <small>${done.length}</small></h2>${done.map(taskRow).join("")}</div>`;
+  h += `<div class="notice">Tik op een taak om te bewerken of te koppelen. Een notitie die je als actiepunt markeert, komt hier vanzelf bij.${S.settings.ttMail ? "" : " Vul in Instellingen je TickTick-mailadres in om taken door te sturen."}</div>`;
+  $("#main").innerHTML = h;
+  setFab(() => taskSheet(null, { pid: ui.taskFilter.startsWith("p") ? ui.taskFilter : (running() || {}).pid || "" }));
+}
+function taskSheet(t, pre = {}) {
+  const isNew = !t; t = t || { title: "", due: "", done: false, pid: pre.pid || "", mid: "", noteId: "" };
+  const k = dkey(new Date()), tm = new Date(); tm.setDate(tm.getDate() + 1);
+  const n = t.noteId ? N(t.noteId) : null;
+  openSheet(`<h3>${isNew ? "Nieuwe taak" : "Taak"}</h3>
+    <label class="l" for="tT">Wat?</label><input type="text" id="tT" value="${esc(t.title)}" placeholder="bijv. Revisie naar uitvoerder sturen">
+    <label class="l">Wanneer</label><div class="seg" style="--n:3" id="tQ"><button data-d="${k}">Vandaag</button><button data-d="${dkey(tm)}">Morgen</button><button data-d="">Geen datum</button></div>
+    <input type="date" id="tD" value="${esc(t.due)}" style="margin-top:6px" aria-label="Datum">
+    <label class="l" for="tP">Werkorder</label><select id="tP">${projOptions(t.pid, { none: "– geen –" })}</select>
+    <label class="l" for="tM">Meting</label><select id="tM"><option value="">– geen –</option>${S.meas.filter(m => nextStep(m) || m.id === t.mid).map(m => `<option value="${m.id}" ${m.id === t.mid ? "selected" : ""}>${esc(m.name)} (${esc(m.pids.map(pnr).join("+"))})</option>`).join("")}</select>
+    ${n ? `<div class="q">Gekoppelde notitie</div><div class="row click" id="tN"><div class="tx"><b>${esc(n.title)}</b><small>${dtShort(n.created)}</small></div><span class="mini">Open</span></div>` : ""}
+    ${!isNew && !n ? `<button class="btn dash block" id="tNew" style="margin-top:10px">+ Notitie bij deze taak</button>` : ""}
+    <div class="actions">${isNew ? `<button class="btn ghost" data-act="close">Annuleer</button>` : `<button class="btn danger" id="tDel">Verwijder</button>`}<button class="btn" id="tOk">Opslaan</button></div>`, () => {
+    $$("#tQ button").forEach(b => b.onclick = () => { $("#tD").value = b.dataset.d; });
+    const keep = () => { t.title = $("#tT").value.trim(); t.due = $("#tD").value; t.pid = $("#tP").value; t.mid = $("#tM").value; };
+    $("#tOk").onclick = () => { keep(); if (!t.title) return toast("Vul de taak in"); if (isNew) { t.id = uid("t"); t.created = nowISO(); S.tasks.push(t); } save(); closeSheet(); render(); };
+    if ($("#tDel")) $("#tDel").onclick = () => { S.tasks = S.tasks.filter(x => x !== t); if (n) { n.action = false; } save(); closeSheet(); render(); };
+    if ($("#tN")) $("#tN").onclick = () => { keep(); save(); noteSheet(n); };
+    if ($("#tNew")) $("#tNew").onclick = () => { keep(); const nn = newNote({ title: t.title, pids: t.pid ? [t.pid] : [], mids: t.mid ? [t.mid] : [] }); noteSheet(nn, { after: saved => { if (saved) { t.noteId = saved.id; save(); } render(); } }); };
+  });
+}
+
+/* =================== UREN =================== */
+function rUren() {
+  setTop("Uren", ui.urenMode === "dag" ? dLong(ui.urenDay) : "", { right: "" });
+  let h = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px"><div class="vseg"><button data-um="dag" class="${ui.urenMode === "dag" ? "on" : ""}">Dag</button><button data-um="week" class="${ui.urenMode === "week" ? "on" : ""}">Week</button></div>
+    <div style="display:flex;gap:6px"><button class="iconbtn" data-act="unav" data-d="-1" aria-label="Vorige">‹</button><button class="mini" data-act="unav" data-d="0">Nu</button><button class="iconbtn" data-act="unav" data-d="1" aria-label="Volgende">›</button></div></div>`;
+  if (ui.urenMode === "dag") {
+    const k = ui.urenDay, lines = dayLines(k);
+    const reg = lines.filter(l => !l.overig).reduce((a, l) => a + l.mins, 0), ov = lines.filter(l => l.overig).reduce((a, l) => a + l.mins, 0);
+    h += `<div class="card" style="padding:6px 14px"><table class="st"><thead><tr><th>Werkorder</th><th class="r">Uren</th><th class="r">Tijden</th><th></th></tr></thead><tbody>
+      ${lines.map((l, i) => `<tr><td><b>${esc(pnr(l.pid))}</b><div class="meta" style="font-weight:600">${l.overig ? "Overige uren" : esc(pname(l.pid) || (P(l.pid) && P(l.pid).indirect ? "Indirect" : ""))}${l.running ? " · loopt nog" : ""}</div></td><td class="r num"><b>${dec(l.mins)}</b></td><td class="r num" style="white-space:nowrap;font-size:13px">${lineTimes(l)}</td><td class="r"><button class="iconbtn" style="width:36px;height:36px" data-act="copyline" data-i="${i}" aria-label="Kopieer regel">${I.copy}</button></td></tr>`).join("") || `<tr><td colspan="4" class="empty">Geen uren op deze dag.</td></tr>`}
+      </tbody></table></div>`;
+    if (lines.length) {
+      const per = {}; lines.forEach(l => { const key = pnr(l.pid) + (l.overig ? " (overig)" : ""); per[key] = (per[key] || 0) + l.mins; });
+      h += `<div class="card"><h2>Totalen</h2><table class="st"><tbody>${Object.entries(per).map(([nr, mins]) => `<tr><td>${esc(nr)}</td><td class="r num">${dec(mins)}</td></tr>`).join("")}</tbody><tfoot><tr><td>Totaal</td><td class="r num">${dec(reg + ov)}</td></tr></tfoot></table></div>`;
+      h += `<div class="notice">${S.settings.round ? "Afgerond op kwartieren, tijden sluiten op elkaar aan. " : ""}Reistijd zit in de werkorder waar je naartoe reed.</div>`;
+    }
+    h += `<div class="actions" style="margin-top:4px"><button class="btn ghost" data-act="editday" data-k="${k}">${I.pen} Dag bewerken</button><button class="btn" data-act="copyday">${I.copy} Kopieer dagstaat</button></div>
+      <label class="check card" style="margin-top:12px"><input type="checkbox" data-act="portal" data-k="${k}" ${S.portal[k] ? "checked" : ""}> Ingevoerd in het urenportaal</label>`;
+  } else {
+    const mon = mondayOf(fromKey(ui.weekRef)); const wk = isoWeek(mon);
+    const end = new Date(mon); end.setDate(end.getDate() + 6);
+    let tr = 0, to = 0, incomplete = 0;
+    const rows = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(mon); d.setDate(d.getDate() + i); const k = dkey(d); const lines = dayLines(k);
+      if (!lines.length && i >= 5) continue;
+      const reg = lines.filter(l => !l.overig).reduce((a, l) => a + l.mins, 0), ov = lines.filter(l => l.overig).reduce((a, l) => a + l.mins, 0);
+      tr += reg; to += ov; if (lines.length && !S.portal[k]) incomplete++;
+      rows.push(`<tr class="click" data-act="gouren" data-k="${k}"><td>${pad(d.getDate())}-${pad(d.getMonth() + 1)} ${DAYS[d.getDay()]}</td><td class="r num">${lines.length || "–"}</td><td class="r num">${lines.length ? dec(reg) : "–"}</td><td class="r num">${lines.length ? dec(ov) : "–"}</td><td class="c">${lines.length ? `<button class="box ${S.portal[k] ? "ok" : "open"}" data-act="portalw" data-k="${k}" aria-label="Ingevoerd in portaal">${S.portal[k] ? I.check : ""}</button>` : ""}</td></tr>`);
+    }
+    h += `<div class="card" style="display:flex;justify-content:space-between;align-items:center"><div class="tx"><b class="num" style="font-size:17px">Week ${wk.y}.${pad(wk.w)}</b><small class="num">${pad(mon.getDate())}-${pad(mon.getMonth() + 1)}-${mon.getFullYear()} t/m ${pad(end.getDate())}-${pad(end.getMonth() + 1)}-${end.getFullYear()}</small></div>
+      <span class="pill ${incomplete ? "warn" : "ok"}">${incomplete ? "Onvolledig" : "Volledig"}</span></div>`;
+    h += `<div class="card" style="padding:6px 14px"><table class="st"><thead><tr><th>Datum</th><th class="r"># Regels</th><th class="r">Reg. uren</th><th class="r">Overige</th><th class="c">Portaal</th></tr></thead><tbody>${rows.join("")}</tbody>
+      <tfoot><tr><td>Totaal</td><td></td><td class="r num">${dec(tr)}</td><td class="r num">${dec(to)}</td><td></td></tr></tfoot></table></div>
+      ${incomplete ? `<div class="notice">${incomplete} dag${incomplete > 1 ? "en" : ""} nog niet in het portaal gezet. Tik op een dag voor de dagstaat.</div>` : ""}
+      <button class="btn ghost block" data-act="exportweek">${I.share} Exporteer week (Excel)</button>`;
+  }
+  $("#main").innerHTML = h;
+}
+function rDagBewerken() {
+  const k = view.k;
+  setTop("Dag bewerken", dLong(k), { back: true });
+  const segs = segsOn(k);
+  let h = "";
+  if (!segs.length) h += `<div class="empty">Geen regels op deze dag.</div>`;
+  segs.forEach((s, i) => {
+    const prev = segs[i - 1];
+    if (prev && prev.end) {
+      const g = (new Date(s.start) - new Date(prev.end)) / 60000, key = `${prev.end}|${s.start}`;
+      if (g >= 5 && !S.ignoredGaps[key]) h += `<div class="gap"><b class="num">${hm(prev.end)}–${hm(s.start)} niet geboekt</b> <span class="meta">(${dec(g)} u). Waarschijnlijk gereden?</span>
+        <div class="pair" style="margin-top:10px"><button class="btn" style="padding:10px" data-act="gapfill" data-a="${prev.end}" data-b="${s.start}" data-pid="${s.pid}">Reistijd → ${esc(pnr(s.pid))}</button><button class="btn ghost" style="padding:10px;flex:0 0 auto" data-act="gapignore" data-key="${esc(key)}">Negeren</button></div></div>`;
+    }
+    h += `<div class="ev ${!s.end ? "run" : ""} ${s.kind === "reis" ? "reis" : ""}"><span class="tm num" style="min-width:92px">${hm(s.start)}–${s.end ? hm(s.end) : "nu"}</span>
+      <div class="tx"><b>${esc(pnr(s.pid))}</b><small>${{ werk: "Werk", reis: "Reistijd", overig: "Overig" }[s.kind] || "Werk"} · ${dec(segMins(s))}${typeof s.lat === "number" ? " · gepind" : ""}</small></div>
+      <button class="iconbtn" style="width:36px;height:36px" data-act="editseg" data-id="${s.id}" aria-label="Bewerk regel">${I.pen}</button></div>`;
+  });
+  h += `<button class="btn dash block" data-act="addseg" data-k="${k}" style="margin-top:8px">+ Regel toevoegen</button>
+    <div class="notice" style="margin-top:12px">Pas tijden, werkorder of soort aan, splits een regel als je tussendoor iets anders deed, of vul een gat met reistijd.</div>`;
+  $("#main").innerHTML = h;
+}
+function segSheet(s, k) {
+  const isNew = !s; const day = k || dkey(s.start);
+  s = s || { pid: (activeProjects()[0] || {}).id || "", start: combine(day, "08:00"), end: combine(day, "09:00"), kind: "werk" };
+  openSheet(`<h3>${isNew ? "Regel toevoegen" : "Regel bewerken"}</h3>${typeof s.lat === "number" ? `<p class="lead num">Gepind op ${fmtLL(s.lat, s.lng)}</p>` : ""}
+    <label class="l" for="gP">Werkorder</label><select id="gP">${projOptions(s.pid)}</select>
+    <label class="l" for="gD">Datum</label><input type="date" id="gD" value="${day}">
+    <div class="pair"><div><label class="l" for="gA">Aankomst / start</label><input type="time" id="gA" value="${hm(s.start)}"></div><div><label class="l" for="gB">Vertrek / eind</label><input type="time" id="gB" value="${s.end ? hm(s.end) : ""}" ${!s.end && !isNew ? 'placeholder="loopt"' : ""}></div></div>
+    ${!s.end && !isNew ? `<div class="meta" style="margin-top:4px">Leeg laten = loopt nog.</div>` : ""}
+    <label class="l">Soort</label><div class="seg" style="--n:3" id="gK">${[["werk", "Werk"], ["reis", "Reistijd"], ["overig", "Overig"]].map(([v, l]) => `<button data-k="${v}" class="${s.kind === v ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${!isNew && s.end ? `<div class="q">Splitsen</div><div class="pair"><input type="time" id="gS" aria-label="Splits om"><button class="btn ghost" id="gSp" style="flex:0 0 auto">Splits</button></div>` : ""}
+    <div class="actions">${isNew ? `<button class="btn ghost" data-act="close">Annuleer</button>` : `<button class="btn danger" id="gDel">Verwijder</button>`}<button class="btn" id="gOk">Opslaan</button></div>`, () => {
+    let kind = s.kind;
+    $$("#gK button").forEach(b => b.onclick = () => { kind = b.dataset.k; $$("#gK button").forEach(x => x.classList.toggle("on", x === b)); });
+    $("#gOk").onclick = () => {
+      const d = $("#gD").value, a = $("#gA").value, b = $("#gB").value, pid = $("#gP").value;
+      if (!d || !a || !pid) return toast("Vul werkorder, datum en starttijd in");
+      const st = combine(d, a), en = b ? combine(d, b) : null;
+      if (en && en <= st) return toast("Eindtijd moet na de starttijd liggen");
+      if (!en && (isNew || s.end)) return toast("Vul een eindtijd in");
+      Object.assign(s, { pid, start: st, end: en, kind });
+      if (isNew) { s.id = uid("s"); S.segs.push(s); }
+      save(); closeSheet(); render();
+    };
+    if ($("#gDel")) $("#gDel").onclick = () => { S.segs = S.segs.filter(x => x !== s); save(); closeSheet(); render(); };
+    if ($("#gSp")) $("#gSp").onclick = () => {
+      const t = $("#gS").value; if (!t) return toast("Kies een tijd om te splitsen");
+      const at = combine(dkey(s.start), t); if (at <= s.start || at >= s.end) return toast("Tijd moet binnen de regel vallen");
+      const b2 = { id: uid("s"), pid: s.pid, start: at, end: s.end, kind: s.kind }; s.end = at; S.segs.push(b2);
+      save(); toast("Gesplitst – pas nu het tweede deel aan"); segSheet(b2);
+    };
+  });
+}
+
+/* =================== EXPORT =================== */
+function periodRange(p) {
+  const now = new Date(), s = new Date(now); s.setHours(0, 0, 0, 0); const e = new Date(s); e.setDate(e.getDate() + 1);
+  if (p === "vandaag") return [s, e];
+  if (p === "week") { const m = mondayOf(now); const x = new Date(m); x.setDate(x.getDate() + 7); return [m, x]; }
+  if (p === "vorigeweek") { const m = mondayOf(now); m.setDate(m.getDate() - 7); const x = new Date(m); x.setDate(x.getDate() + 7); return [m, x]; }
+  if (p === "maand") { const m = new Date(now.getFullYear(), now.getMonth(), 1); return [m, new Date(now.getFullYear(), now.getMonth() + 1, 1)]; }
+  if (p && p.startsWith("wk:")) { const m = fromKey(p.slice(3)); const x = new Date(m); x.setDate(x.getDate() + 7); return [m, x]; }
+  return [new Date(2000, 0, 1), new Date(2100, 0, 1)];
+}
+function exportSheet(pre = {}) {
+  openSheet(`<h3>Exporteren</h3><p class="lead">Alles komt als bestanden op je telefoon: Excel, een veldrapport en de originele foto's.</p>
+    <div class="pair"><div><label class="l" for="xP">Werkorder</label><select id="xP"><option value="">Alle werkorders</option>${S.projects.map(p => `<option value="${p.id}" ${pre.pid === p.id ? "selected" : ""}>${esc(p.nr)}</option>`).join("")}</select></div>
+    <div><label class="l" for="xR">Periode</label><select id="xR">${(pre.range && pre.range.startsWith("wk:") ? [[pre.range, "Week " + isoWeek(fromKey(pre.range.slice(3))).w]] : []).concat([["vandaag", "Vandaag"], ["week", "Deze week"], ["vorigeweek", "Vorige week"], ["maand", "Deze maand"], ["alles", "Alles"]]).map(([v, l]) => `<option value="${v}" ${(pre.range || "week") === v ? "selected" : ""}>${l}</option>`).join("")}</select></div></div>
+    <div class="card" style="margin-top:12px;padding:4px 14px">
+      <label class="row check" style="margin:0"><input type="checkbox" id="xU" ${pre.only === "uren" || !pre.only ? "checked" : ""}><span class="tx"><b>Uren</b><small>Dagstaat en weekstaat zoals in het portaal (Excel)</small></span></label>
+      <label class="row check" style="margin:0"><input type="checkbox" id="xM" ${!pre.only ? "checked" : ""}><span class="tx"><b>Metingen</b><small>Met status en datum per stap (Excel)</small></span></label>
+      <label class="row check" style="margin:0"><input type="checkbox" id="xN" ${!pre.only ? "checked" : ""}><span class="tx"><b>Veldrapport + originele foto's</b><small>Notities per meting, foto's met datum, tijd en GPS in de metadata</small></span></label>
+      <label class="row check" style="margin:0"><input type="checkbox" id="xT"><span class="tx"><b>Taken</b><small>Open en afgerond (Excel)</small></span></label>
+    </div>
+    <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="xGo">Exporteer</button></div>`, () => {
+    $("#xGo").onclick = async () => {
+      const o = { pid: $("#xP").value, range: $("#xR").value, uren: $("#xU").checked, meas: $("#xM").checked, notes: $("#xN").checked, tasks: $("#xT").checked };
+      if (!o.uren && !o.meas && !o.notes && !o.tasks) return toast("Kies minstens één onderdeel");
+      $("#xGo").disabled = true; $("#xGo").textContent = "Bezig…";
+      try { await doExport(o); } catch (e) { console.error(e); toast("Export mislukt: " + e.message); $("#xGo").disabled = false; $("#xGo").textContent = "Exporteer"; }
+    };
+  });
+}
+const fnSafe = s => String(s || "").replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").trim().slice(0, 60) || "x";
+const stamp = d => { d = new Date(d); return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`; };
+async function urenSheets(o) {
+  const [a, b] = periodRange(o.range);
+  const days = [...new Set(S.segs.filter(s => new Date(s.start) >= a && new Date(s.start) < b).map(s => dkey(s.start)))].sort();
+  const lineRows = [[{ v: "Datum", s: "bold" }, { v: "Werkorder", s: "bold" }, { v: "Omschrijving", s: "bold" }, { v: "Uren", s: "bold" }, { v: "Tijden", s: "bold" }, { v: "Soort", s: "bold" }]];
+  const dayRows = [[{ v: "Week", s: "bold" }, { v: "Datum", s: "bold" }, { v: "# Regels", s: "bold" }, { v: "Reg. uren", s: "bold" }, { v: "Overige uren", s: "bold" }, { v: "In portaal", s: "bold" }]];
+  const segRows = [[{ v: "Datum", s: "bold" }, { v: "Werkorder", s: "bold" }, { v: "Start", s: "bold" }, { v: "Eind", s: "bold" }, { v: "Uren (exact)", s: "bold" }, { v: "Soort", s: "bold" }, { v: "Pin lat", s: "bold" }, { v: "Pin lon", s: "bold" }]];
+  let tot = 0;
+  for (const k of days) {
+    let lines = dayLines(k); if (o.pid) lines = lines.filter(l => l.pid === o.pid);
+    if (!lines.length) continue;
+    const d = fromKey(k), wk = isoWeek(d), dl = `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()} ${DAYS[d.getDay()]}`;
+    lines.forEach(l => { lineRows.push([dl, pnr(l.pid), l.overig ? "Overige uren" : pname(l.pid), { v: Math.round(l.mins / 60 * 100) / 100, s: "num2" }, lineTimes(l), l.overig ? "Overig" : "Regulier"]); tot += l.mins; });
+    const reg = lines.filter(l => !l.overig).reduce((x, l) => x + l.mins, 0), ov = lines.filter(l => l.overig).reduce((x, l) => x + l.mins, 0);
+    dayRows.push([`${wk.y}.${pad(wk.w)}`, dl, lines.length, { v: Math.round(reg / 60 * 100) / 100, s: "num2" }, { v: Math.round(ov / 60 * 100) / 100, s: "num2" }, S.portal[k] ? "ja" : "nee"]);
+    segsOn(k).filter(s => !o.pid || s.pid === o.pid).forEach(s => segRows.push([dl, pnr(s.pid), hm(s.start), s.end ? hm(s.end) : "loopt", { v: Math.round(segMins(s) / 60 * 100) / 100, s: "num2" }, s.kind, typeof s.lat === "number" ? s.lat : "", typeof s.lng === "number" ? s.lng : ""]));
+  }
+  lineRows.push(["", "", { v: "Totaal", s: "bold" }, { v: Math.round(tot / 60 * 100) / 100, s: "boldnum2" }]);
+  return [{ name: "Dagstaat", rows: lineRows, widths: [18, 18, 34, 8, 16, 10] }, { name: "Weekstaat", rows: dayRows, widths: [10, 18, 10, 10, 12, 10] }, { name: "Tijdregels exact", rows: segRows, widths: [18, 18, 8, 8, 12, 10, 12, 12] }];
+}
+function inRange(iso, o) { const [a, b] = periodRange(o.range); const d = new Date(iso); return d >= a && d < b; }
+function measList(o) { return S.meas.filter(m => (!o.pid || m.pids.includes(o.pid)) && (o.range === "alles" || inRange(m.steps.gemeten || m.created, o) || nextStep(m))); }
+function measSheetRows(list) {
+  const rows = [[{ v: "Meting", s: "bold" }, { v: "Werkorder(s)", s: "bold" }, ...STEPS.map(s => ({ v: s[1], s: "bold" })), { v: "Status", s: "bold" }, { v: "Notities", s: "bold" }]];
+  list.forEach(m => { const n = nextStep(m); rows.push([m.name, m.pids.map(pnr).join(" + "), ...STEPS.map(([k]) => m.steps[k] ? dtShort(m.steps[k]) : ""), n ? (NEXTLBL[n[0]] || "Gepland") : "Klaar", notesOfMeas(m.id).length]); });
+  return [{ name: "Metingen", rows, widths: [32, 22, 16, 16, 16, 16, 16, 18, 10] }];
+}
+function taskSheetRows(o) {
+  const rows = [[{ v: "Taak", s: "bold" }, { v: "Datum", s: "bold" }, { v: "Werkorder", s: "bold" }, { v: "Meting", s: "bold" }, { v: "Afgerond", s: "bold" }]];
+  S.tasks.filter(t => !o.pid || t.pid === o.pid).forEach(t => rows.push([t.title, t.due || "", t.pid ? pnr(t.pid) : "", t.mid && M(t.mid) ? M(t.mid).name : "", t.done ? "ja" : "nee"]));
+  return [{ name: "Taken", rows, widths: [40, 12, 18, 28, 10] }];
+}
+async function photoWithGps(p) {
+  const u8 = new Uint8Array(await p.blob.arrayBuffer());
+  if (typeof p.lat !== "number" || p.exifGps) return u8;
+  return VWLib.addGps(u8, { lat: p.lat, lng: p.lng, alt: typeof p.alt === "number" ? p.alt : undefined, taken: p.taken });
+}
+async function doExport(o) {
+  const files = []; // {path, data}
+  const label = (o.pid ? fnSafe(pnr(o.pid)) + "_" : "") + { vandaag: "vandaag", week: "deze-week", vorigeweek: "vorige-week", maand: "deze-maand", alles: "alles" }[o.range] || o.range.replace(":", "");
+  if (o.uren) files.push({ path: `Uren_${label}.xlsx`, data: await VWLib.xlsx(await urenSheets(o)) });
+  if (o.meas) files.push({ path: `Metingen_${label}.xlsx`, data: await VWLib.xlsx(measSheetRows(measList(o))) });
+  if (o.tasks) files.push({ path: `Taken_${label}.xlsx`, data: await VWLib.xlsx(taskSheetRows(o)) });
+  if (o.notes) {
+    const notes = S.notes.filter(n => (!o.pid || n.pids.includes(o.pid)) && inRange(n.created, o));
+    const meta = [["bestand", "notitie", "werkorder", "meting", "gemaakt", "lat", "lon", "nauwkeurigheid_m", "bron_locatie"]];
+    const groups = {}; // per werkorder / meting
+    let rep = `<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><title>Veldrapport</title><style>body{font-family:system-ui,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#222}h1{margin:0 0 4px}h2{border-bottom:2px solid #C4532B;padding-bottom:4px;margin-top:32px}h3{margin:20px 0 4px}.m{color:#666;font-size:13px}.n{border:1px solid #ddd;border-radius:10px;padding:12px;margin:10px 0;page-break-inside:avoid}.b{white-space:pre-wrap}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.g img{width:100%;border-radius:6px}.g div{font-size:11px;color:#555}@media print{h2{page-break-before:auto}}</style></head><body><h1>Veldrapport</h1><div class="m">Gemaakt ${dtShort(nowISO())} · ${esc(o.pid ? pnr(o.pid) : "alle werkorders")} · ${notes.length} notities</div>`;
+    for (const n of notes) {
+      const wo = n.pids.length ? n.pids.map(pnr).join(" + ") : "Zonder werkorder";
+      const ms = n.mids.map(M).filter(Boolean).map(m => m.name).join(", ") || "Algemeen";
+      (groups[wo] = groups[wo] || {}); (groups[wo][ms] = groups[wo][ms] || []).push(n);
+    }
+    let photoCount = 0;
+    for (const wo of Object.keys(groups).sort()) {
+      rep += `<h2>${esc(wo)}</h2>`;
+      for (const ms of Object.keys(groups[wo])) {
+        rep += `<h3>Meting: ${esc(ms)}</h3>`;
+        for (const n of groups[wo][ms]) {
+          rep += `<div class="n"><b>${esc(n.title)}</b> <span class="m">${dtShort(n.created)}${n.action ? " · actiepunt" + (n.actionDone ? " (afgehandeld)" : "") : ""}</span>${n.body ? `<div class="b">${esc(n.body)}</div>` : ""}<div class="g">`;
+          let i = 0;
+          for (const pid of n.photos) {
+            const p = await DB.photoGet(pid); if (!p) continue; i++; photoCount++;
+            const ext = (p.type.split("/")[1] || "jpg").replace("jpeg", "jpg").replace("heic", "heic");
+            const fname = `${fnSafe(n.pids[0] ? pnr(n.pids[0]) : "los")}_${stamp(p.taken)}_${fnSafe(n.title).slice(0, 30)}_${i}.${ext}`;
+            const path = `Fotos/${fnSafe(wo)}/${fnSafe(ms)}/${fname}`;
+            files.push({ path, data: await photoWithGps(p), date: new Date(p.taken) });
+            meta.push([path, n.title, wo, ms, p.taken, p.lat ?? "", p.lng ?? "", p.acc ? Math.round(p.acc) : "", p.locSource]);
+            rep += `<div><img src="${esc(path)}" alt=""><br>${hm(p.taken)} ${typeof p.lat === "number" ? fmtLL(p.lat, p.lng) : "geen locatie"}</div>`;
+          }
+          rep += `</div></div>`;
+        }
+      }
+    }
+    rep += `</body></html>`;
+    files.push({ path: "Veldrapport.html", data: rep });
+    if (photoCount) files.push({ path: "Fotos/fotolijst.csv", data: "﻿" + meta.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n") });
+  }
+  let blob, name;
+  if (files.length === 1 && files[0].path.endsWith(".xlsx")) { blob = files[0].data; name = files[0].path; }
+  else { const z = new VWLib.Zip(); files.forEach(f => z.add(f.path, f.data, f.date)); blob = await z.blob(); name = `Veldwerk_${label}_${stamp(nowISO())}.zip`; }
+  deliver(blob, name);
+}
+function deliver(blob, name) {
+  const file = new File([blob], name, { type: blob.type || "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const canShare = navigator.canShare && navigator.canShare({ files: [file] });
+  openSheet(`<h3>Export klaar</h3><p class="lead">${esc(name)} · ${(blob.size / 1048576).toFixed(1)} MB</p>
+    <div class="actions" style="flex-direction:column"><a class="btn" href="${url}" download="${esc(name)}" id="dlA">${I.share} Downloaden</a>${canShare ? `<button class="btn ghost" id="shB">Delen (mail, Drive, WhatsApp…)</button>` : ""}<button class="btn ghost" data-act="close">Sluit</button></div>`, () => {
+    if ($("#shB")) $("#shB").onclick = async () => { try { await navigator.share({ files: [file], title: name }); } catch (e) { if (e.name !== "AbortError") toast("Delen lukt niet, gebruik Downloaden"); } };
+    $("#dlA").onclick = () => setTimeout(() => toast("Download gestart"), 300);
+  });
+}
+
+/* ---------- Back-up ---------- */
+const b64 = async blob => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(String(fr.result).split(",")[1]); fr.readAsDataURL(blob); });
+const unb64 = (s, type) => { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); };
+async function backup() {
+  toast("Back-up maken…");
+  const photos = await DB.photoAll();
+  const out = { app: "veldwerk", v: 1, made: nowISO(), state: S, photos: [] };
+  for (const p of photos) { const { blob, thumb, ...rest } = p; out.photos.push(Object.assign(rest, { data: await b64(blob) })); }
+  deliver(new Blob([JSON.stringify(out)], { type: "application/json" }), `Veldwerk_backup_${stamp(nowISO())}.json`);
+}
+async function restore(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== "veldwerk" || !data.state) throw new Error("Geen Veldwerk-back-up");
+    openSheet(`<h3>Back-up terugzetten?</h3><p class="lead">Back-up van ${dtShort(data.made)} met ${data.photos.length} foto's. Alles wat nu in de app staat wordt vervangen.</p>
+      <div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn danger" id="rY">Vervang alles</button></div>`, () => {
+      $("#rY").onclick = async () => {
+        $("#rY").disabled = true; await DB.photoClear(); urlCache.clear();
+        for (const p of data.photos) { const { data: d, ...rest } = p; rest.blob = unb64(d, p.type); rest.thumb = await makeThumb(rest.blob); await DB.photoPut(rest); }
+        S = Object.assign(DEFAULT(), data.state); S.settings = Object.assign(DEFAULT().settings, data.state.settings || {});
+        await DB.set("state", S); applyTheme(); closeSheet(); toast("Back-up teruggezet"); back.length = 0; go("vandaag", null, false);
+      };
+    });
+  } catch (e) { toast("Terugzetten mislukt: " + e.message); }
+}
+$("#restoreIn").addEventListener("change", e => { const f = e.target.files[0]; if (f) restore(f); });
+
+/* ---------- Instellingen ---------- */
+async function settingsSheet() {
+  let est = "";
+  try { if (navigator.storage && navigator.storage.estimate) { const e = await navigator.storage.estimate(); est = `${(e.usage / 1048576).toFixed(1)} MB in gebruik`; } } catch (e) { }
+  let persisted = false; try { persisted = navigator.storage && navigator.storage.persisted ? await navigator.storage.persisted() : false; } catch (e) { }
+  const st = S.settings;
+  openSheet(`<h3>Instellingen</h3>
+    <label class="l">Weergave</label><div class="seg" style="--n:3" id="sTh">${[["auto", "Automatisch"], ["light", "Licht"], ["dark", "Donker"]].map(([v, l]) => `<button data-v="${v}" class="${st.theme === v ? "on" : ""}">${l}</button>`).join("")}</div>
+    <label class="l" for="sR">Locatie herkennen binnen (meter)</label><input type="number" id="sR" min="20" max="2000" step="10" value="${st.radius}">
+    <label class="check" style="margin-top:8px"><input type="checkbox" id="sRd" ${st.round ? "checked" : ""}> Dagstaat afronden op kwartieren</label>
+    <label class="l" for="sTT">TickTick-mailadres (optioneel)</label><input type="email" id="sTT" value="${esc(st.ttMail)}" placeholder="todo+xxxx@mail.ticktick.com">
+    <div class="q">Gegevens</div>
+    <div class="meta" style="margin-bottom:8px">Alles staat alleen op dit toestel. ${esc(est)}${persisted ? " · beschermd tegen opruimen" : ""}. Maak regelmatig een back-up.</div>
+    <div class="grid2"><button class="btn ghost" id="sBk">Back-up maken</button><button class="btn ghost" id="sRs">Back-up terugzetten</button></div>
+    <div class="actions"><button class="btn" id="sOk">Opslaan</button></div>
+    <div class="meta" style="margin-top:14px;text-align:center">Veldwerk v1.0</div>`, () => {
+    let theme = st.theme;
+    $$("#sTh button").forEach(b => b.onclick = () => { theme = b.dataset.v; $$("#sTh button").forEach(x => x.classList.toggle("on", x === b)); S.settings.theme = theme; applyTheme(); });
+    $("#sBk").onclick = backup;
+    $("#sRs").onclick = () => { $("#restoreIn").value = ""; $("#restoreIn").click(); };
+    $("#sOk").onclick = () => { S.settings = Object.assign(st, { theme, radius: Math.max(20, +$("#sR").value || 150), round: $("#sRd").checked, ttMail: $("#sTT").value.trim() }); applyTheme(); save(); closeSheet(); render(); };
+  });
+}
+
+/* =================== Klikafhandeling =================== */
+document.addEventListener("click", e => {
+  const nv = e.target.closest("[data-nav-go]"); if (nv) { back.length = 0; view = { name: nv.dataset.navGo }; render(); return; }
+  const tabEl = e.target.closest("[data-pt],[data-mf],[data-ptab],[data-nf],[data-tf],[data-um]");
+  if (tabEl && !e.target.closest("#sheet")) {
+    const d = tabEl.dataset;
+    if (d.pt) ui.projTab = d.pt; if (d.mf) ui.measFilter = d.mf; if (d.ptab) view.tab = d.ptab; if (d.nf) ui.noteFilter = d.nf; if (d.tf) ui.taskFilter = d.tf; if (d.um) ui.urenMode = d.um;
+    render(); return;
+  }
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  const d = a.dataset, act = d.act;
+  const H = {
+    back: goBack, close: closeSheet, settings: settingsSheet, export: () => exportSheet(view.name === "project" ? { pid: view.id } : {}),
+    pin: doPin, laptop: laptopSheet, switch: switchSheet, depart: departSheet,
+    stoptravel: () => { S.travel = null; save(); render(); toast("Reistijd gestopt"); },
+    newnote: () => { const r = running(); const m = d.mid ? M(d.mid) : null; noteSheet(newNote({ pids: d.pid ? [d.pid] : m ? [...m.pids] : r ? [r.pid] : [], mids: m ? [m.id] : [] })); },
+    newphoto: () => { const r = running(); const n = newNote({ pids: r ? [r.pid] : [] }); noteSheet(n); const c = $("#nCam"); if (c) c.click(); },
+    newmeas: () => measNewSheet(d.pid),
+    gomeas: () => { ui.projTab = "metingen"; ui.measFilter = d.f || "open"; back.length = 0; go("projecten", null, false); },
+    openproj: () => go("project", { id: d.id }), editproj: () => projectSheet(P(d.id)),
+    openmeas: () => go("meting", { id: d.id }),
+    stepnow: () => { const m = M(view.id); m.steps[d.k] = nowISO(); save(); render(); toast("Bijgewerkt"); },
+    steptoggle: () => { const m = M(view.id); m.steps[d.k] = m.steps[d.k] ? null : nowISO(); save(); render(); },
+    workon: () => { const m = M(view.id); const at = nowISO(); stopRunning(at); S.travel = null; startSeg(m.pids[0], at, "werk"); save(); toast("Uren lopen op " + pnr(m.pids[0])); back.length = 0; go("vandaag", null, false); },
+    unlinkmp: () => { const m = M(view.id); m.pids = m.pids.filter(x => x !== d.id); save(); render(); },
+    linkmp: () => { const m = M(view.id); pickSheet("Koppel werkorder", activeProjects().filter(p => !m.pids.includes(p.id)).map(p => ({ id: p.id, t: p.nr, s: p.name })), id => { m.pids.push(id); save(); closeSheet(); render(); }, "Geen andere actieve werkorders."); },
+    unlinkmn: () => { const n = N(d.id); n.mids = n.mids.filter(x => x !== view.id); save(); render(); },
+    linkmn: () => { const m = M(view.id); const ns = S.notes.filter(n => !n.mids.includes(m.id)).sort((x, y) => (m.pids.some(p => y.pids.includes(p)) - m.pids.some(p => x.pids.includes(p))) || y.created.localeCompare(x.created)); pickSheet("Koppel notitie", ns.map(n => ({ id: n.id, t: n.title, s: n.pids.map(pnr).join(" + ") + " · " + dtShort(n.created) })), id => { N(id).mids.push(m.id); save(); closeSheet(); render(); }, "Geen andere notities."); },
+    actiondone: () => { const n = N(d.id); n.actionDone = a.checked; const t = S.tasks.find(x => x.noteId === n.id); if (t) { t.done = a.checked; t.doneAt = a.checked ? nowISO() : null; } save(); render(); },
+    renamemeas: () => { const m = M(view.id); openSheet(`<h3>Naam meting</h3><input type="text" id="rnN" value="${esc(m.name)}"><div class="actions"><button class="btn ghost" data-act="close">Annuleer</button><button class="btn" id="rnOk">Opslaan</button></div>`, () => $("#rnOk").onclick = () => { const v = $("#rnN").value.trim(); if (v) { m.name = v; save(); } closeSheet(); render(); }); },
+    delmeas: () => { const m = M(view.id); confirmSheet(`meting “${m.name}”`, () => { S.meas = S.meas.filter(x => x !== m); S.notes.forEach(n => n.mids = n.mids.filter(x => x !== m.id)); S.tasks.forEach(t => { if (t.mid === m.id) t.mid = ""; }); save(); closeSheet(); goBack(); }, "Gekoppelde notities blijven bestaan."); },
+    opennote: () => noteSheet(N(d.id)),
+    viewphoto: () => photoViewer(d.id),
+    taskdone: () => { const t = T(d.id); t.done = a.checked; t.doneAt = a.checked ? nowISO() : null; if (t.noteId && N(t.noteId)) N(t.noteId).actionDone = a.checked; save(); setTimeout(render, 250); },
+    opentask: () => taskSheet(T(d.id)),
+    tt: () => { const t = T(d.id); if (!S.settings.ttMail) return; const body = [t.due ? "Datum: " + t.due : "", t.pid ? "Werkorder: " + pnr(t.pid) : ""].filter(Boolean).join("\n"); location.href = `mailto:${encodeURIComponent(S.settings.ttMail)}?subject=${encodeURIComponent(t.title)}&body=${encodeURIComponent(body)}`; t.tt = true; save(); setTimeout(render, 500); },
+    editday: () => go("dagbewerken", { k: d.k }), editseg: () => segSheet(S.segs.find(s => s.id === d.id)), addseg: () => segSheet(null, d.k),
+    gapfill: () => { S.segs.push({ id: uid("s"), pid: d.pid, start: d.a, end: d.b, kind: "reis" }); save(); render(); toast("Reistijd geboekt"); },
+    gapignore: () => { S.ignoredGaps[d.key] = true; save(); render(); },
+    gouren: () => { ui.urenMode = "dag"; ui.urenDay = d.k; back.length = 0; view = { name: "uren" }; render(); window.scrollTo(0, 0); },
+    unav: () => {
+      const n = +d.d;
+      if (ui.urenMode === "dag") { if (!n) ui.urenDay = dkey(new Date()); else { const x = fromKey(ui.urenDay); x.setDate(x.getDate() + n); ui.urenDay = dkey(x); } }
+      else { if (!n) ui.weekRef = dkey(new Date()); else { const x = fromKey(ui.weekRef); x.setDate(x.getDate() + 7 * n); ui.weekRef = dkey(x); } }
+      render();
+    },
+    copyline: async () => { const l = dayLines(ui.urenDay)[+d.i]; await copyText(`${pnr(l.pid)}\t${dec(l.mins)}\t${lineTimes(l)}`, "Regel gekopieerd"); },
+    copyday: async () => { const ls = dayLines(ui.urenDay); if (!ls.length) return toast("Geen uren"); await copyText(`Dagstaat ${dShort(ui.urenDay)}\n` + ls.map(l => `${pnr(l.pid)}${pname(l.pid) ? " " + pname(l.pid) : ""}\t${dec(l.mins)}\t${lineTimes(l)}`).join("\n") + `\nTotaal\t${dec(ls.reduce((x, l) => x + l.mins, 0))}`, "Dagstaat gekopieerd"); },
+    portal: () => { S.portal[d.k] = a.checked; if (!a.checked) delete S.portal[d.k]; save(); },
+    portalw: () => { e.stopPropagation(); if (S.portal[d.k]) delete S.portal[d.k]; else S.portal[d.k] = true; save(); render(); },
+    exportweek: () => { const mon = mondayOf(fromKey(ui.weekRef)); const cur = mondayOf(new Date()); const diff = Math.round((cur - mon) / 6048e5); exportSheet({ only: "uren", range: diff === 0 ? "week" : diff === 1 ? "vorigeweek" : "wk:" + dkey(mon) }); }
+  };
+  if (act === "portalw") { e.stopPropagation(); }
+  if (H[act]) { if (act !== "taskdone" && act !== "actiondone" && act !== "portal") e.preventDefault(); H[act](); }
+}, true);
+async function copyText(t, msg) {
+  try { await navigator.clipboard.writeText(t); toast(msg); }
+  catch (e) { openSheet(`<h3>Kopiëren</h3><p class="lead">Selecteer en kopieer de tekst.</p><textarea rows="8" id="cpT">${esc(t)}</textarea><div class="actions"><button class="btn" data-act="close">Klaar</button></div>`, () => { $("#cpT").select(); }); }
+}
+
+/* =================== Start =================== */
+(async function init() {
+  try { await DB.open(); const st = await DB.get("state"); if (st) { S = Object.assign(DEFAULT(), st); S.settings = Object.assign(DEFAULT().settings, st.settings || {}); } }
+  catch (e) { toast("Opslag niet beschikbaar – gegevens worden niet bewaard"); }
+  applyTheme();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
+  render();
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && view.name === "vandaag") render(); });
+  if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => { });
+})();
+</script>
+</body>
+</html>
