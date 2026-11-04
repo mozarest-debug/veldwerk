@@ -4,14 +4,6 @@ Webapp voor landmeters: werkdag en uren per werkorder (met locatie-pin en reisti
 
 Alle gegevens blijven op je eigen telefoon (in de browseropslag). Maak regelmatig een back-up via Instellingen.
 
-## Online zetten met GitHub Pages
-
-1. Maak op GitHub een nieuwe **publieke** repository, bijv. `veldwerk`.
-2. Upload alle bestanden uit deze map (Add file → Upload files) en klik op Commit.
-3. Ga naar Settings → Pages en kies bij Source: *Deploy from a branch*, met branch `main` en map `/ (root)`.
-4. Na een minuut staat de app op `https://<gebruikersnaam>.github.io/veldwerk/`.
-
-De code is dan openbaar, maar je gegevens niet: die staan alleen op je telefoon.
 
 ## Op je telefoon zetten
 
