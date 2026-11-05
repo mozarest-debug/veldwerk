@@ -1,7 +1,7 @@
 /* Veldwerk service worker: app werkt ook zonder internet.
    Verhoog VERSION bij elke nieuwe release. */
-const VERSION = "veldwerk-v1.0.0";
-const SHELL = ["./", "./index.html", "./lib.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
+const VERSION = "veldwerk-v1.1.0";
+const SHELL = ["./", "./index.html", "./lib.js", "./app2.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

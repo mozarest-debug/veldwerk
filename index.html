@@ -263,7 +263,8 @@ const pname = id => (P(id) || { name: "" }).name;
 const activeProjects = () => S.projects.filter(p => p.active !== false).sort((a, b) => a.nr.localeCompare(b.nr));
 const running = () => S.segs.find(s => !s.end);
 const segsOn = k => S.segs.filter(s => dkey(s.start) === k).sort((a, b) => a.start.localeCompare(b.start));
-const nextStep = m => STEPS.find(([k]) => !m.steps[k]);
+function stepsOf(m) { return STEPS; }
+const nextStep = m => stepsOf(m).find(([k]) => !m.steps[k]);
 function measPill(m) {
   const n = nextStep(m);
   if (!n) return `<span class="pill ok">Klaar</span>`;
@@ -408,7 +409,7 @@ function rVandaag() {
     <button class="quick" data-act="newnote">${I.note}Notitie</button>
     <button class="quick" data-act="newphoto">${I.cam}Foto</button>
     <button class="quick" data-act="newmeas">${I.meas}Meting</button></div>`;
-  const notExp = S.meas.filter(m => m.steps.gemeten && !m.steps.export);
+  const notExp = S.meas.filter(m => m.kind !== "kd" && m.steps.gemeten && !m.steps.export);
   if (notExp.length) h += `<div class="notice click" data-act="gomeas" data-f="export"><b>${notExp.length} meting${notExp.length > 1 ? "en" : ""}</b> nog niet geëxporteerd · ${notExp.slice(0, 3).map(m => esc(m.name)).join(", ")}</div>`;
   const openTasks = S.tasks.filter(t => !t.done && t.due && t.due <= k);
   if (openTasks.length) h += `<div class="notice click" data-nav-go="taken"><b>${openTasks.length} ta${openTasks.length > 1 ? "ken" : "ak"}</b> voor vandaag · ${openTasks.slice(0, 2).map(t => esc(t.title)).join(", ")}</div>`;
@@ -595,7 +596,7 @@ function rProjecten() {
     if (arch.length) { h += `<div class="card"><h2>Archief <small>${arch.length}</small></h2>${arch.map(p => `<div class="row click" data-act="openproj" data-id="${p.id}"><div class="tx" style="color:var(--muted)"><b>${esc(p.nr)}</b> ${esc(p.name)}</div></div>`).join("")}</div>`; }
     setFab(() => projectSheet());
   } else {
-    const F = { open: ["Open", m => nextStep(m)], export: ["Niet geëxporteerd", m => m.steps.gemeten && !m.steps.export], verwerken: ["Te verwerken", m => m.steps.export && !m.steps.verwerkt], verzenden: ["Te verzenden / map", m => m.steps.verwerkt && (!m.steps.verzonden || !m.steps.projectmap)], klaar: ["Klaar", m => !nextStep(m)], alle: ["Alle", () => true] };
+    const F = { open: ["Open", m => nextStep(m)], export: ["Niet geëxporteerd", m => m.kind !== "kd" && m.steps.gemeten && !m.steps.export], verwerken: ["Te verwerken", m => m.kind !== "kd" && m.steps.export && !m.steps.verwerkt], verzenden: ["Te verzenden / map", m => m.steps.verwerkt && (!m.steps.verzonden || !m.steps.projectmap)], klaar: ["Klaar", m => !nextStep(m)], alle: ["Alle", () => true] };
     h += `<div class="tabs">${Object.entries(F).map(([k, [l, f]]) => `<button data-mf="${k}" class="${ui.measFilter === k ? "on" : ""}">${l} · ${S.meas.filter(f).length}</button>`).join("")}</div>`;
     const list = S.meas.filter(F[ui.measFilter][1]).sort((a, b) => (b.steps.gemeten || b.created).localeCompare(a.steps.gemeten || a.created));
     if (!list.length) h += `<div class="empty">Geen metingen in deze lijst.</div>`;
@@ -1262,5 +1263,6 @@ async function copyText(t, msg) {
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => { });
 })();
 </script>
+<script src="app2.js"></script>
 </body>
 </html>
