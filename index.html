@@ -1255,6 +1255,7 @@ async function copyText(t, msg) {
 (async function init() {
   try { await DB.open(); const st = await DB.get("state"); if (st) { S = Object.assign(DEFAULT(), st); S.settings = Object.assign(DEFAULT().settings, st.settings || {}); } }
   catch (e) { toast("Opslag niet beschikbaar – gegevens worden niet bewaard"); }
+  window.VW_READY = true;
   applyTheme();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { }
@@ -1264,5 +1265,6 @@ async function copyText(t, msg) {
 })();
 </script>
 <script src="app2.js"></script>
+<script src="native.js"></script>
 </body>
 </html>
