@@ -1,6 +1,6 @@
 /* Veldwerk service worker: app werkt ook zonder internet.
    Verhoog VERSION bij elke nieuwe release. */
-const VERSION = "veldwerk-v1.2.0";
+const VERSION = "veldwerk-v1.3.0";
 const SHELL = ["./", "./index.html", "./lib.js", "./app2.js", "./native.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 
 self.addEventListener("install", e => {

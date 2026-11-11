@@ -21,6 +21,21 @@
     } else if (S.travel) {
       o.travel = { since: new Date(S.travel.since).getTime(), from: S.travel.fromPid ? pnr(S.travel.fromPid) : "" };
     }
+    // gegevens voor de widgets
+    const dark = S.settings.theme === "dark" || (S.settings.theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+    o.theme = dark ? "dark" : "light";
+    const k = dkey(new Date());
+    o.meas = S.meas.filter(m => nextStep(m)).sort((a, b) => (b.steps.gemeten || b.created).localeCompare(a.steps.gemeten || a.created)).slice(0, 40).map(m => {
+      const n = nextStep(m);
+      const lbl = m.kind === "kd" ? n[1] : (n[0] === "gemeten" ? "Gepland" : NEXTLBL[n[0]]);
+      return { id: m.id, title: m.name, sub: (m.pids.map(pnr).join(" + ") || "") + (m.steps.gemeten ? " · " + dtShort(m.steps.gemeten) : ""), pill: lbl, warn: n[0] === "export" };
+    });
+    o.tasks = S.tasks.filter(t => !t.done).sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999")).slice(0, 40).map(t => ({
+      id: t.id, title: t.title, sub: [t.due ? (t.due === k ? "vandaag" : t.due < k ? "te laat · " + dShort(t.due) : dShort(t.due)) : "", t.mid && M(t.mid) ? M(t.mid).name : ""].filter(Boolean).join(" · "),
+      pill: t.pid && P(t.pid) ? woCode(t.pid) : "", warn: !!(t.due && t.due <= k) }));
+    o.notes = S.notes.slice().sort((a, b) => (b.updated || b.created).localeCompare(a.updated || a.created)).slice(0, 30).map(n => ({
+      id: n.id, title: n.title || "Notitie", sub: dtShort(n.created) + (n.photos.length ? " · " + n.photos.length + " foto" + (n.photos.length > 1 ? "'s" : "") : ""),
+      pill: n.pids[0] ? woCode(n.pids[0]) : "", warn: !!(n.action && !n.actionDone) }));
     return o;
   }
   let last = "";
@@ -33,7 +48,16 @@
   const _save = save;
   save = function () { _save(); nativeSync(); };
 
+  async function applyOps() {
+    try {
+      const r = await V.pendingOps(); const ops = JSON.parse((r && r.ops) || "[]");
+      let n = 0;
+      for (const op of ops) if (op.type === "taskdone") { const t = T(op.id); if (t && !t.done) { t.done = true; t.doneAt = new Date(op.at || Date.now()).toISOString(); if (t.noteId && N(t.noteId)) N(t.noteId).actionDone = true; n++; } }
+      if (n) { save(); render(); toast(n + (n > 1 ? " taken" : " taak") + " afgevinkt via de widget"); }
+    } catch (e) { }
+  }
   async function doAction() {
+    await applyOps();
     let a = null;
     try { const r = await V.pendingAction(); a = r && r.action; } catch (e) { return; }
     if (!a) return;
@@ -45,7 +69,15 @@
     else if (a === "pin") { if (!r) doPin(); }
     else if (a === "stoptravel") { S.travel = null; save(); render(); toast("Reistijd gestopt"); }
     else if (a === "editday") { go("dagbewerken", { k: dkey(new Date()) }); }
+    else if (a.startsWith("meas:")) { if (M(a.slice(5))) go("meting", { id: a.slice(5) }); }
+    else if (a.startsWith("task:")) { if (T(a.slice(5))) taskSheet(T(a.slice(5))); }
+    else if (a.startsWith("note:")) { if (N(a.slice(5))) noteSheet(N(a.slice(5))); }
+    else if (a === "new:meas") { measNewSheet(r ? r.pid : ""); }
+    else if (a === "new:task") { taskSheet(null, { pid: r ? r.pid : "" }); }
+    else if (a === "new:note") { noteSheet(newNote({ pids: r ? [r.pid] : [] })); }
   }
+  try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => nativeSync()); } catch (e) { }
+  setInterval(() => { if (!document.hidden) nativeSync(); }, 60000);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) { doAction(); nativeSync(); } });
 
   // Exports: opslaan in Downloads/Veldwerk + delen via Android
