@@ -36,6 +36,10 @@
     o.notes = S.notes.slice().sort((a, b) => (b.updated || b.created).localeCompare(a.updated || a.created)).slice(0, 30).map(n => ({
       id: n.id, title: n.title || "Notitie", sub: dtShort(n.created) + (n.photos.length ? " · " + n.photos.length + " foto" + (n.photos.length > 1 ? "'s" : "") : ""),
       pill: n.pids[0] ? woCode(n.pids[0]) : "", warn: !!(n.action && !n.actionDone) }));
+    o.radius = S.settings.radius || 150;
+    o.projects = activeProjects().map(p => ({ id: p.id, nr: p.nr, name: p.name || "", code: woCode(p.id), indirect: !!p.indirect, locs: (p.locs || []).slice(-20).map(l => [l.lat, l.lng]) }))
+      .sort((a, b) => lastUse(b.id).localeCompare(lastUse(a.id)) || a.nr.localeCompare(b.nr));
+    o.runningPid = r ? r.pid : "";
     return o;
   }
   let last = "";
@@ -48,12 +52,31 @@
   const _save = save;
   save = function () { _save(); nativeSync(); };
 
+  function applyPin(op) {
+    const p = P(op.pid); if (!p) return;
+    const at = new Date(op.at).toISOString();
+    if (op.link && typeof op.lat === "number") p.locs.push({ lat: op.lat, lng: op.lng, at });
+    const tr = S.travel;
+    stopRunning(at);
+    if (tr && new Date(at) - new Date(tr.since) >= 60000) startSeg(p.id, tr.since, "reis").end = at;
+    S.travel = null;
+    startSeg(p.id, at, "werk", typeof op.lat === "number" ? { lat: op.lat, lng: op.lng } : null);
+  }
+  function applyAdd(op) {
+    const d = op.data || {}, at = new Date(op.at || Date.now()).toISOString();
+    if (op.kind === "task") S.tasks.push({ id: uid("t"), title: d.title || "Taak", due: d.due || "", done: false, pid: d.pid || "", mid: "", noteId: "", created: at });
+    else if (op.kind === "note") { const n = newNote({ title: d.title || "", body: d.body || "", pids: d.pid ? [d.pid] : [], action: !!d.action, created: at }); n.id = uid("n"); if (!n.title) n.title = (n.body.split("\n")[0] || "Notitie").slice(0, 60); S.notes.push(n); syncActionTask(n); }
+    else if (op.kind === "meas") S.meas.push({ id: uid("m"), name: d.name || "Meting", pids: d.pid ? [d.pid] : [], steps: { gemeten: d.gemeten === false ? null : at, export: null, verwerkt: null, verzonden: null, projectmap: null }, created: at });
+  }
   async function applyOps() {
     try {
       const r = await V.pendingOps(); const ops = JSON.parse((r && r.ops) || "[]");
       let n = 0;
-      for (const op of ops) if (op.type === "taskdone") { const t = T(op.id); if (t && !t.done) { t.done = true; t.doneAt = new Date(op.at || Date.now()).toISOString(); if (t.noteId && N(t.noteId)) N(t.noteId).actionDone = true; n++; } }
-      if (n) { save(); render(); toast(n + (n > 1 ? " taken" : " taak") + " afgevinkt via de widget"); }
+      ops.sort((a, b) => (a.at || 0) - (b.at || 0));
+      for (const op of ops) if (op.type === "pin") { applyPin(op); n++; }
+      else if (op.type === "add") { applyAdd(op); n++; }
+      else if (op.type === "taskdone") { const t = T(op.id); if (t && !t.done) { t.done = true; t.doneAt = new Date(op.at || Date.now()).toISOString(); if (t.noteId && N(t.noteId)) N(t.noteId).actionDone = true; n++; } }
+      if (n) { save(); render(); toast(n === 1 ? "Widget-actie verwerkt" : n + " widget-acties verwerkt"); }
     } catch (e) { }
   }
   async function doAction() {
@@ -92,6 +115,15 @@
     }).catch(e => { closeSheet(); toast("Opslaan mislukt: " + (e.message || e)); });
   };
 
+  const _settings = settingsSheet;
+  settingsSheet = async function () {
+    await _settings();
+    const acts = sheet.querySelector(".actions"); if (!acts || !V.openWidgetSettings) return;
+    const d = document.createElement("div");
+    d.innerHTML = `<div class="q">Widgets</div><button class="btn ghost block" id="wSet">Widgets aanpassen (kleuren, dekking, grootte)</button>`;
+    acts.before(d);
+    $("#wSet").onclick = () => V.openWidgetSettings().then(r => { if (r && r.count === 0) toast("Plaats eerst een Veldwerk-widget op je startscherm"); }).catch(e => toast(e.message || "Widgets aanpassen mislukt"));
+  };
   const boot = () => {
     if (!window.VW_READY) { setTimeout(boot, 300); return; }
     if (!S.settings.mods) { S.settings.mods = { lm: true, kd: false }; _save(); }

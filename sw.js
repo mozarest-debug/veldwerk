@@ -1,6 +1,6 @@
 /* Veldwerk service worker: app werkt ook zonder internet.
    Verhoog VERSION bij elke nieuwe release. */
-const VERSION = "veldwerk-v1.3.0";
+const VERSION = "veldwerk-v1.4.0";
 const SHELL = ["./", "./index.html", "./lib.js", "./app2.js", "./native.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 
 self.addEventListener("install", e => {
@@ -18,8 +18,13 @@ self.addEventListener("fetch", e => {
     e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put("./index.html", copy)); return r; }).catch(() => caches.match("./index.html")));
     return;
   }
-  // Eigen bestanden en lettertypen: cache, en op de achtergrond verversen
-  if (url.origin === location.origin || url.hostname.endsWith("fonts.googleapis.com") || url.hostname.endsWith("fonts.gstatic.com")) {
+  // Eigen bestanden: eerst netwerk (altijd de nieuwste versie), zonder verbinding uit de cache
+  if (url.origin === location.origin) {
+    e.respondWith(fetch(req).then(r => { if (r && r.ok) { const copy = r.clone(); caches.open(VERSION).then(c => c.put(req, copy)); } return r; }).catch(() => caches.match(req)));
+    return;
+  }
+  // Lettertypen: cache, op de achtergrond verversen
+  if (url.hostname.endsWith("fonts.googleapis.com") || url.hostname.endsWith("fonts.gstatic.com")) {
     e.respondWith(caches.match(req).then(hit => {
       const net = fetch(req).then(r => { if (r && (r.ok || r.type === "opaque")) { const copy = r.clone(); caches.open(VERSION).then(c => c.put(req, copy)); } return r; }).catch(() => hit);
       return hit || net;
