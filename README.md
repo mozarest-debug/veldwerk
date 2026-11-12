@@ -1,6 +1,6 @@
 # Veldwerk
 
-Webapp voor landmeters: werkdag en uren per werkorder (met locatie-pin en reistijd), metingen met status, veldnotities met foto's, takenlijst en export in het format van het urenportaal.
+Webapp voor landmeters: werkdag en uren per werkorder (met locatie-pin en reistijd), metingen met status, veldnotities met foto's, takenlijst en een export mogelijkheid van al deze gegevens.
 
 Alle gegevens blijven op je eigen telefoon (in de browseropslag). Maak regelmatig een back-up via Instellingen.
 
